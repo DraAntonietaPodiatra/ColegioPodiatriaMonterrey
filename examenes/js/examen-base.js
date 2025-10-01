@@ -1,5 +1,5 @@
 /* =================================================================== */
-/* JavaScript Base para Exámenes - PodiaClass                         */
+/* JavaScript Base para Exámenes - Plataforma Académica de Podiatría  */
 /* =================================================================== */
 
 class ExamenPodiatria {
