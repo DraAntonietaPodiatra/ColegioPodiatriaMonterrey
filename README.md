@@ -1,11 +1,11 @@
-# PodiaClass - Plataforma Educativa del Colegio de Podiatría
+# Plataforma Académica de Podiatría - Dra. Antonieta Acosta Grajales
 
-Este repositorio contiene la plataforma educativa "PodiaClass" para el Colegio de Podiatría de Monterrey, incluyendo el sistema de exámenes en línea.
+Este repositorio contiene la plataforma educativa "Plataforma Académica de Podiatría" de la Dra. Antonieta Acosta Grajales, profesora del Colegio de Podiatría de Monterrey, incluyendo el sistema de exámenes en línea.
 
 ## 🏗️ Estructura del Proyecto
 
 ```
-PodiaClass/
+PlataformaAcademicaPodiatria/
 ├── index.html              # Dashboard principal de la plataforma
 ├── style.css               # Estilos principales
 ├── script.js               # Lógica de autenticación y navegación
@@ -66,7 +66,7 @@ Y la carpeta `examen/` completa.
 
 1. Ve a [Google Sheets](https://sheets.google.com)
 2. Crea una nueva hoja de cálculo
-3. Nómbrala "PodiaClass - Calificaciones"
+3. Nómbrala "Plataforma Académica de Podiatría - Calificaciones"
 4. Renombra la primera hoja como "Calificaciones"
 5. Los encabezados se crearán automáticamente cuando ejecutes el Apps Script
 
@@ -112,7 +112,7 @@ Para hospedar la plataforma:
 3. En **Source**, selecciona **Deploy from a branch**
 4. Selecciona **main** branch y **/ (root)**
 5. Haz clic en **Save**
-6. Tu plataforma estará disponible en: `https://tu-usuario.github.io/PodiaClass`
+6. Tu plataforma estará disponible en: `https://tu-usuario.github.io/PlataformaAcademicaPodiatria`
 
 ## 👥 Usuarios del Sistema
 
