@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodiaClass | Colegio de Podiatría</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide-static@latest/dist/lucide.min.js"></script>
+</head>
+<body>
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <img src="https://i.imgur.com/gL0shok.png" alt="Logo Colegio de Podiatría" class="logo">
+            <h1 class="login-title">Bienvenido a PodiaClass</h1>
+            <p class="login-subtitle">Plataforma Educativa de la Dra. Antonieta Acosta Grajales</p>
+            <p class="institution-note">Profesora del Colegio de Podiatría de Monterrey</p>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="studentName">Selecciona tu nombre:</label>
+                    <select id="studentName" class="input-field">
+                         <option value="" disabled selected>-- Nombre del Alumno --</option>
+                         <!-- Nombres se cargarán desde JS -->
+                    </select>
+                </div>
+                <div id="student-matricula-container" class="form-group">
+                    <label for="studentMatricula">Número de Matrícula:</label>
+                    <input type="number" id="studentMatricula" class="input-field" placeholder="Ingresa tu matrícula">
+                </div>
+                <div id="student-password-container" class="form-group hidden">
+                    <label for="studentPassword">Contraseña:</label>
+                    <input type="password" id="studentPassword" class="input-field" placeholder="Ingresa tu contraseña">
+                </div>
+                <button id="login-button" class="btn btn-primary btn-full" disabled>Acceder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESTRUCTURA PRINCIPAL DE LA APP (Oculta inicialmente) -->
+    <div class="app-layout hidden">
+        <nav class="main-sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.imgur.com/gL0shok.png" alt="Logo Colegio de Podiatría" class="logo">
+                <div class="platform-info">
+                    <h3>PodiaClass</h3>
+                    <p class="platform-subtitle">Dra. Antonieta Acosta Grajales</p>
+                    <p class="platform-note">Plataforma educativa independiente</p>
+                </div>
+            </div>
+            <ul class="main-nav">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active" data-view="dashboard">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item feature-hidden">
+                    <a href="#biblioteca" class="nav-link" data-view="biblioteca">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span>Biblioteca de Clases</span>
+                    </a>
+                </li>
+                <li class="nav-item feature-hidden">
+                    <a href="#evaluaciones" class="nav-link" data-view="evaluaciones">
+                        <i data-lucide="clipboard-check" class="nav-icon"></i>
+                        <span>Evaluaciones</span>
+                    </a>
+                </li>
+                <li class="nav-item teacher-only hidden">
+                    <a href="reportes.html" class="nav-link" data-view="admin">
+                       <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        <span>Panel de Reportes</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar" id="user-avatar"></div>
+                    <div class="user-info">
+                        <span id="user-name">Cargando...</span>
+                        <small id="user-role">Alumno</small>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div id="dashboard-view" class="view active">
+                <header class="main-header">
+                    <div>
+                        <h1 id="welcome-message">¡Hola, Alumno!</h1>
+                        <p>Este es tu panel de control. ¡Mucha suerte en tu examen!</p>
+                    </div>
+                </header>
+                
+                <div class="focused-content">
+                    <div class="widget">
+                        <h2>Evaluación Programada</h2>
+                        <p class="widget-subtitle">Tienes una evaluación pendiente.</p>
+                        <div class="next-exam-card">
+                            <h4>Examen Parcial: Cirugía Ungueal</h4>
+                            <p>Fecha de aplicación: <strong>2 de Octubre</strong></p>
+                            <a href="examenes/cirugia-ungueal-parcial1.html" class="btn btn-primary" target="_blank">Iniciar Examen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vistas ocultas para futuro desarrollo -->
+            <div id="biblioteca-view" class="view hidden"></div>
+            <div id="evaluaciones-view" class="view hidden"></div>
+            <div id="admin-view" class="view hidden"></div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+

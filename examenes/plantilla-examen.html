@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLANTILLA - Examen - Colegio de Podiatría de Monterrey</title>
+    <link rel="stylesheet" href="css/examen-base.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="examen-container">
+        <div class="examen-wrapper">
+
+            <!-- Pantalla de Inicio -->
+            <div id="start-screen" class="pantalla-inicio">
+                <img src="https://i.imgur.com/gL0shok.png" alt="Logotipo del Colegio de Podiatría de Monterrey" class="logo-examen">
+                <h1 class="titulo-examen">TÍTULO DEL EXAMEN</h1>
+                <p class="subtitulo-examen">Nombre del Profesor</p>
+                
+                <div class="formulario-autenticacion">
+                    <div class="grupo-formulario">
+                        <label for="studentName">1. Selecciona tu nombre:</label>
+                        <select id="studentName" class="campo-entrada" required>
+                            <option value="" disabled selected>-- Nombre del Alumno --</option>
+                            <option value="CESARINA SOLEDAD LOPEZ FERNANDEZ">CESARINA SOLEDAD LOPEZ FERNANDEZ</option>
+                            <option value="SOFIA CASTAÑEDA SUAREZ">SOFIA CASTAÑEDA SUAREZ</option>
+                            <option value="JESUS MANUEL VEGA LOPEZ">JESUS MANUEL VEGA LOPEZ</option>
+                            <option value="EDGAR ALFREDO SANCHEZ LIRA">EDGAR ALFREDO SANCHEZ LIRA</option>
+                            <option value="RICARDO ALEJANDRO ROMO GONZALEZ">RICARDO ALEJANDRO ROMO GONZALEZ</option>
+                            <option value="KEVIN ANTONIO GUTIERREZ PACHECO">KEVIN ANTONIO GUTIERREZ PACHECO</option>
+                            <option value="DIANA LAURA BAÑUELOS REYES">DIANA LAURA BAÑUELOS REYES</option>
+                            <option value="GEORGINA VILLALPANDO LÓPEZ">GEORGINA VILLALPANDO LÓPEZ</option>
+                            <option value="JAQUELINE GUADALUPE VERA CABRERA">JAQUELINE GUADALUPE VERA CABRERA</option>
+                            <option value="MARIA SUSANA HERNANDEZ PAULA">MARIA SUSANA HERNANDEZ PAULA</option>
+                            <option value="Dra. Antonieta Alejandra Acosta Grajales">Dra. Antonieta Alejandra Acosta Grajales (Profesora)</option>
+                        </select>
+                    </div>
+                    
+                    <div id="student-code-container" class="grupo-formulario hidden">
+                        <label for="studentCode">2. Ingresa tu número de matrícula:</label>
+                        <input type="number" id="studentCode" class="campo-entrada" placeholder="Número de Matrícula">
+                    </div>
+                    
+                    <div id="student-password-container" class="grupo-formulario hidden">
+                        <label for="studentPassword">2. Ingresa tu contraseña:</label>
+                        <input type="password" id="studentPassword" class="campo-entrada" placeholder="Contraseña">
+                    </div>
+                </div>
+                
+                <div id="status-message" class="mensaje-estado"></div>
+                <div id="action-buttons" class="botones-accion"></div>
+            </div>
+
+            <!-- Pantalla de Examen -->
+            <div id="quiz-screen" class="pantalla-examen hidden">
+                <div class="encabezado-examen">
+                    <h2 class="numero-pregunta">Pregunta <span id="question-number">1</span> de <span id="total-questions">X</span></h2>
+                    <p id="current-section" class="seccion-actual">Sección</p>
+                </div>
+                
+                <div class="barra-progreso">
+                    <div id="progress-bar" class="barra-progreso-interna"></div>
+                </div>
+                
+                <h3 id="question-text" class="texto-pregunta"></h3>
+                <div id="options-container" class="contenedor-opciones"></div>
+                
+                <div class="pie-examen">
+                    <button id="next-button" onclick="nextQuestion()" class="btn btn-principal" disabled>Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Pantalla de Revisión -->
+            <div id="review-screen" class="pantalla-revision hidden">
+                <h2 class="titulo-revision">Revisión de Respuestas</h2>
+                <div id="review-container" class="contenedor-revision"></div>
+                <div class="botones-revision">
+                    <button onclick="showFinalResult()" class="btn btn-principal">Ver Calificación Final</button>
+                </div>
+            </div>
+
+            <!-- Pantalla Final -->
+            <div id="final-screen" class="pantalla-final hidden">
+                <img src="https://i.imgur.com/gL0shok.png" alt="Logotipo del Colegio de Podiatría de Monterrey" class="logo-final">
+                <h2 class="titulo-final">Examen Finalizado</h2>
+                <p class="mensaje-final">Hola, <span id="result-name" class="font-bold"></span>. Tu resultado ha sido registrado.</p>
+                
+                <div id="result-box" class="caja-resultado">
+                    <p class="text-2xl font-bold">Tu calificación final es:</p>
+                    <p id="score-text" class="calificacion-final"></p>
+                    <p id="feedback-text" class="texto-retroalimentacion"></p>
+                </div>
+                
+                <div id="gemini-case-study-container" class="contenedor-caso-estudio">
+                    <h3 class="titulo-caso-estudio">✨ Caso de Estudio Personalizado con Fuentes</h3>
+                    <div class="botones-caso-estudio">
+                        <button id="gemini-case-study-button" onclick="generateCaseStudy()" class="btn btn-oro">Generar Caso de Estudio para Reforzar</button>
+                    </div>
+                    <div id="case-study-content" class="contenido-caso-estudio">
+                        <div id="case-study-spinner" class="spinner hidden"></div>
+                        <p id="case-study-text" class="texto-caso-estudio"></p>
+                        <div id="case-study-sources" class="fuentes-caso-estudio"></div>
+                    </div>
+                    <div id="case-study-answers-container" class="contenedor-respuestas-caso">
+                        <button id="gemini-reveal-answers-button" onclick="revealCaseStudyAnswers()" class="btn btn-oro">✨ Revelar y Explicar Respuestas</button>
+                        <div id="case-study-answers-content" class="contenido-respuestas-caso">
+                            <div id="case-study-answers-spinner" class="spinner hidden"></div>
+                            <p id="case-study-answers-text" class="texto-caso-estudio"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-500 mt-8">Puedes cerrar esta ventana.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/examen-base.js"></script>
+    <script>
+        // --- CONFIGURACIÓN DEL EXAMEN ---
+        // MODIFICAR ESTOS DATOS PARA CADA NUEVO EXAMEN
+        const examConfig = {
+            examId: 'NOMBRE_EXAMEN_UNICO', // Ej: 'anatomia_parcial1'
+            examTitle: 'TÍTULO DEL EXAMEN', // Ej: 'Examen Parcial Anatomía'
+            questions: [
+                // EJEMPLO DE PREGUNTA:
+                {
+                    section: "Nombre de la Sección",
+                    question: "Texto de la pregunta...",
+                    options: [
+                        "A) Opción 1",
+                        "B) Opción 2", 
+                        "C) Opción 3",
+                        "D) Opción 4"
+                    ],
+                    answer: "A) Opción 1", // Respuesta correcta (debe coincidir exactamente)
+                    feedback: "Explicación de por qué esta respuesta es correcta..."
+                },
+                // Agregar más preguntas aquí...
+            ]
+        };
+
+        // --- FUNCIONES PARA CASO DE ESTUDIO CON GEMINI ---
+        const GEMINI_API_KEY = ""; // Configurar clave de API aquí
+
+        async function callGroundedGemini(prompt, systemPrompt) {
+            const model = "gemini-1.5-flash-latest";
+            if (!GEMINI_API_KEY) {
+                return {
+                    text: "Error: La clave de la API de Gemini no ha sido configurada. Por favor, añádela en la variable 'GEMINI_API_KEY' dentro del código.",
+                    sources: []
+                };
+            }
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                tools: [{ "google_search": {} }],
+            };
+
+            if (systemPrompt) {
+                payload.systemInstruction = { parts: [{ text: systemPrompt }] };
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate?.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    const groundingMetadata = candidate.groundingMetadata;
+                    const sources = (groundingMetadata?.groundingAttributions || []).map(attr => ({
+                        uri: attr.web?.uri,
+                        title: attr.web?.title
+                    })).filter(s => s.uri && s.title);
+                    return { text, sources };
+                } else {
+                    console.warn("API response structure might have changed or was empty:", result);
+                    let errorMessage = "No se recibió una respuesta válida de la API.";
+                    if (candidate && candidate.finishReason === 'SAFETY') {
+                        errorMessage = "La respuesta fue bloqueada por políticas de seguridad. Intenta reformular la solicitud.";
+                    }
+                    return { text: errorMessage, sources: [] };
+                }
+            } catch (error) {
+                console.error("Gemini API call failed:", error);
+                return {
+                    text: "Lo siento, no se pudo generar la respuesta en este momento. Por favor, revisa la consola para más detalles.",
+                    sources: []
+                };
+            }
+        }
+
+        async function generateCaseStudy() {
+            const button = document.getElementById('gemini-case-study-button');
+            const spinner = document.getElementById('case-study-spinner');
+            const textEl = document.getElementById('case-study-text');
+            const sourcesEl = document.getElementById('case-study-sources');
+            const answersContainer = document.getElementById('case-study-answers-container');
+
+            button.disabled = true;
+            spinner.classList.remove('hidden');
+            textEl.textContent = '';
+            sourcesEl.innerHTML = '';
+            answersContainer.classList.add('hidden');
+            document.getElementById('case-study-answers-content').classList.add('hidden');
+
+            const incorrectTopics = new Set();
+            examen.userAnswers.forEach((answer, index) => {
+                if (examen.config.questions[index].options[answer] !== examen.config.questions[index].answer) {
+                    incorrectTopics.add(examen.config.questions[index].section);
+                }
+            });
+
+            const topics = Array.from(incorrectTopics).join(', ');
+            const systemPrompt = "Eres un profesor experto en podiatría creando un caso clínico para un estudiante. Basado en los siguientes temas, crea un caso práctico y conciso (150-200 palabras) que presente un escenario de un paciente. Basa tu respuesta en conocimiento de fuentes académicas y guías clínicas (como JAPMA, UpToDate, o libros de texto de podiatría). Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione.";
+            const userPrompt = `Temas a reforzar: ${topics}. Por favor, genera el caso de estudio.`;
+
+            const result = await callGroundedGemini(userPrompt, systemPrompt);
+            
+            const fullText = result.text;
+            const questionRegex = /(Pregunta[s]? \d+[:.].*|\¿.*?\?)/gi;
+            const questions = fullText.match(questionRegex);
+            
+            examen.caseStudyCache = {
+                text: fullText,
+                sources: result.sources,
+                questions: questions ? questions.join('\n') : ''
+            };
+            
+            textEl.textContent = fullText;
+            
+            if (result.sources && result.sources.length > 0) {
+                let sourcesHtml = '<h4 class="titulo-fuentes">Fuentes Consultadas:</h4><ul class="lista-fuentes">';
+                result.sources.forEach(source => {
+                    sourcesHtml += `<li><a href="${source.uri}" target="_blank">${source.title}</a></li>`;
+                });
+                sourcesHtml += '</ul>';
+                sourcesEl.innerHTML = sourcesHtml;
+            }
+
+            spinner.classList.add('hidden');
+            
+            if (examen.caseStudyCache.questions) {
+                answersContainer.classList.remove('hidden');
+                document.getElementById('gemini-reveal-answers-button').disabled = false;
+                document.getElementById('case-study-answers-content').classList.add('hidden');
+            }
+        }
+
+        async function revealCaseStudyAnswers() {
+            const button = document.getElementById('gemini-reveal-answers-button');
+            const answersContent = document.getElementById('case-study-answers-content');
+            const spinner = document.getElementById('case-study-answers-spinner');
+            const textEl = document.getElementById('case-study-answers-text');
+
+            button.disabled = true;
+            answersContent.classList.remove('hidden');
+            spinner.classList.remove('hidden');
+            textEl.textContent = '';
+
+            const systemPrompt = "Eres un profesor experto en podiatría. Responde de forma clara y fundamentada las siguientes preguntas, basándote en el caso clínico proporcionado. Explica el razonamiento clínico detrás de cada respuesta.";
+            const userPrompt = `
+                Basado en el siguiente caso clínico:
+                ---
+                ${examen.caseStudyCache.text}
+                ---
+                Responde y explica las siguientes preguntas:
+                ${examen.caseStudyCache.questions}
+            `;
+            
+            const result = await callGroundedGemini(userPrompt, systemPrompt);
+            textEl.textContent = result.text;
+            
+            spinner.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Calificaciones - PodiaClass</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="reportes.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide-static@latest/dist/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar (similar al principal) -->
+        <nav class="main-sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.imgur.com/gL0shok.png" alt="Logo Colegio de Podiatría" class="logo">
+                <div class="platform-info">
+                    <h3>PodiaClass</h3>
+                    <p class="platform-subtitle">Dra. Antonieta Acosta Grajales</p>
+                    <p class="platform-note">Plataforma educativa independiente</p>
+                </div>
+            </div>
+            <ul class="main-nav">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reportes.html" class="nav-link active">
+                       <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        <span>Panel de Reportes</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="main-header">
+                <div>
+                    <h1>Reporte de Calificaciones</h1>
+                    <p>Análisis del rendimiento de los alumnos.</p>
+                </div>
+            </header>
+            
+            <div id="loading-spinner" class="spinner-container">
+                <div class="spinner"></div>
+                <p>Cargando datos desde Google Sheets...</p>
+            </div>
+
+            <div id="report-content" class="hidden">
+                <!-- Sección de Estadísticas Clave -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <i data-lucide="users" class="stat-icon"></i>
+                        <div class="stat-info">
+                            <span id="total-students" class="stat-number">0</span>
+                            <span class="stat-label">Alumnos Registrados</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i data-lucide="clipboard-check" class="stat-icon"></i>
+                        <div class="stat-info">
+                            <span id="total-exams" class="stat-number">0</span>
+                            <span class="stat-label">Exámenes Disponibles</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i data-lucide="graduation-cap" class="stat-icon"></i>
+                        <div class="stat-info">
+                            <span id="average-pass-rate" class="stat-number">0%</span>
+                            <span class="stat-label">Tasa de Aprobación General</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Gráficos -->
+                <section class="charts-grid">
+                    <div class="chart-container widget">
+                        <h2>Distribución de Calificaciones</h2>
+                        <canvas id="scores-chart"></canvas>
+                    </div>
+                    <div class="chart-container widget">
+                        <h2>Completados por Examen</h2>
+                        <canvas id="completion-chart"></canvas>
+                    </div>
+                </section>
+
+                <!-- Tabla de Calificaciones -->
+                <section class="widget">
+                    <h2>Tabla General de Calificaciones</h2>
+                    <div class="table-container">
+                        <table id="grades-table">
+                            <thead>
+                                <!-- Los encabezados se generarán dinámicamente -->
+                            </thead>
+                            <tbody>
+                                <!-- Las filas de los alumnos se generarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="reportes.js"></script>
+</body>
+</html>
+
