@@ -1,6 +1,6 @@
-# Sistema de Exámenes PodiaClass
+# Sistema de Exámenes - Plataforma Académica de Podiatría
 
-Este directorio contiene el sistema modular de exámenes para la plataforma PodiaClass del Colegio de Podiatría de Monterrey.
+Este directorio contiene el sistema modular de exámenes para la Plataforma Académica de Podiatría de la Dra. Antonieta Acosta Grajales.
 
 ## Estructura de Archivos
 
