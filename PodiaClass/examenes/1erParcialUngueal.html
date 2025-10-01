@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Parcial Cirugía Ungueal - Colegio de Podiatría de Monterrey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --colegio-dark-blue: #012130;
+            --colegio-medium-blue: #013b56;
+            --colegio-gold: #c5a473;
+            --bg-soft: #f4f7f9;
+            --text-dark: #212529;
+            --text-light: #495057;
+            --border-color: #e0e0e0;
+            --success: #155724;
+            --success-bg: #d4edda;
+            --warning: #856404;
+            --warning-bg: #fff3cd;
+            --danger: #721c24;
+            --danger-bg: #f8d7da;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-soft);
+            color: var(--text-dark);
+        }
+
+        .quiz-wrapper {
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .gemini-button {
+            background-color: var(--colegio-gold);
+            color: var(--colegio-dark-blue);
+            transition: all 0.3s ease;
+        }
+        .gemini-button:hover:not(:disabled) {
+            background-color: #b3915f;
+            transform: translateY(-1px);
+        }
+        .gemini-button:disabled {
+            background-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .start-button, .next-button, .continue-button {
+            background-color: var(--colegio-medium-blue);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(1, 59, 86, 0.3);
+        }
+        .start-button:hover:not(:disabled), 
+        .next-button:hover:not(:disabled),
+        .continue-button:hover:not(:disabled) {
+            background-color: var(--colegio-dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(1, 59, 86, 0.35);
+        }
+        .start-button:disabled, .next-button:disabled, .continue-button:disabled {
+            background-color: #adb5bd; 
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .resume-button {
+            background-color: var(--colegio-gold);
+            color: var(--colegio-dark-blue);
+        }
+
+        .input-field {
+            border: 2px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: var(--colegio-gold);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(197, 164, 115, 0.25);
+        }
+        .input-field:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .progress-bar-inner { 
+            background-color: var(--colegio-gold); 
+            transition: width 0.4s ease-in-out;
+        }
+
+        .quiz-option {
+            background-color: #ffffff;
+            border-color: var(--border-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .quiz-option:hover {
+            border-color: var(--colegio-medium-blue);
+            transform: scale(1.02);
+        }
+        .quiz-option.selected {
+            background-color: var(--colegio-dark-blue);
+            border-color: var(--colegio-dark-blue);
+            color: #ffffff;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, .1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--colegio-dark-blue);
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="quiz-wrapper w-full max-w-3xl bg-white rounded-xl overflow-hidden transition-all duration-500">
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="p-8 md:p-12">
+            <img src="https://i.imgur.com/gL0shok.png" alt="Logotipo del Colegio de Podiatría de Monterrey" class="mx-auto h-32 w-auto mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center" style="color: var(--colegio-dark-blue);">Examen Parcial Cirugía Ungueal</h1>
+            <p class="text-center text-lg mb-6" style="color: var(--colegio-medium-blue);">Dra. Antonieta Alejandra Acosta Grajales</p>
+            <div class="my-8 space-y-4">
+                <div>
+                    <label for="studentName" class="block text-lg font-semibold mb-2 text-center" style="color:var(--colegio-dark-blue)">1. Selecciona tu nombre:</label>
+                    <select id="studentName" class="input-field w-full max-w-sm mx-auto p-3 text-center text-lg rounded-md" required>
+                        <option value="" disabled selected>-- Nombre del Alumno --</option>
+                        <option value="CESARINA SOLEDAD LOPEZ FERNANDEZ">CESARINA SOLEDAD LOPEZ FERNANDEZ</option>
+                        <option value="SOFIA CASTAÑEDA SUAREZ">SOFIA CASTAÑEDA SUAREZ</option>
+                        <option value="JESUS MANUEL VEGA LOPEZ">JESUS MANUEL VEGA LOPEZ</option>
+                        <option value="EDGAR ALFREDO SANCHEZ LIRA">EDGAR ALFREDO SANCHEZ LIRA</option>
+                        <option value="RICARDO ALEJANDRO ROMO GONZALEZ">RICARDO ALEJANDRO ROMO GONZALEZ</option>
+                        <option value="KEVIN ANTONIO GUTIERREZ PACHECO">KEVIN ANTONIO GUTIERREZ PACHECO</option>
+                        <option value="DIANA LAURA BAÑUELOS REYES">DIANA LAURA BAÑUELOS REYES</option>
+                        <option value="GEORGINA VILLALPANDO LÓPEZ">GEORGINA VILLALPANDO LÓPEZ</option>
+                        <option value="JAQUELINE GUADALUPE VERA CABRERA">JAQUELINE GUADALUPE VERA CABRERA</option>
+                        <option value="MARIA SUSANA HERNANDEZ PAULA">MARIA SUSANA HERNANDEZ PAULA</option>
+                    </select>
+                </div>
+                <div id="student-code-container" class="hidden">
+                    <label for="studentCode" class="block text-lg font-semibold mb-2 text-center" style="color:var(--colegio-dark-blue)">2. Ingresa tu número de matrícula:</label>
+                    <input type="number" id="studentCode" class="input-field w-full max-w-sm mx-auto p-3 text-center text-lg rounded-md" placeholder="Número de Matrícula">
+                </div>
+            </div>
+            <div id="status-message" class="text-center font-bold my-4"></div>
+            <div id="action-buttons" class="mt-4">
+                 <button id="start-button" onclick="validateAndStart()" class="start-button w-full text-white font-bold py-4 px-10 rounded-lg text-xl" disabled>Comenzar Examen</button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold" style="color: var(--colegio-medium-blue);">Pregunta <span id="question-number"></span> de <span id="total-questions"></span></h2>
+                    <p id="current-section" class="text-sm font-semibold text-right" style="color: var(--text-light)"></p>
+                </div>
+                <div class="bg-gray-200 h-2.5 rounded-full mb-6">
+                    <div id="progress-bar" class="progress-bar-inner h-2.5 rounded-full"></div>
+                </div>
+                <h3 id="question-text" class="text-xl md:text-2xl font-semibold mb-8 min-h-[140px]"></h3>
+                <div id="options-container" class="space-y-4"></div>
+            </div>
+            <div class="bg-gray-50 p-6 flex justify-end">
+                <button id="next-button" onclick="nextQuestion()" class="next-button text-white font-bold py-3 px-8 rounded-lg" disabled>Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Review Screen -->
+        <div id="review-screen" class="hidden p-8">
+            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--colegio-dark-blue);">Revisión de Respuestas</h2>
+            <div id="review-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
+            <div class="mt-8 text-center">
+                <button onclick="showFinalResult()" class="continue-button w-full md:w-auto text-white font-bold py-3 px-10 rounded-lg text-lg">Ver Calificación Final</button>
+            </div>
+        </div>
+
+        <!-- Final Screen -->
+        <div id="final-screen" class="hidden p-8 md:p-12 text-center">
+            <img src="https://i.imgur.com/gL0shok.png" alt="Logotipo del Colegio de Podiatría de Monterrey" class="mx-auto h-24 w-auto mb-6">
+             <h2 class="text-3xl font-bold mb-4" style="color: var(--colegio-dark-blue);">Examen Parcial Finalizado</h2>
+             <p class="text-lg mb-6" style="color: var(--text-light);">Hola, <span id="result-name" class="font-bold"></span>. Tu resultado ha sido registrado.</p>
+             <div id="result-box" class="p-6 rounded-lg my-6">
+                 <p class="text-2xl font-bold">Tu calificación final es:</p>
+                 <p id="score-text" class="text-5xl font-bold my-2"></p>
+                 <p id="feedback-text" class="text-lg"></p>
+             </div>
+             
+             <div id="gemini-case-study-container" class="mt-8 text-left hidden">
+                <h3 class="text-2xl font-bold mb-4 text-center" style="color: var(--colegio-dark-blue);">✨ Caso de Estudio Personalizado con Fuentes</h3>
+                <div class="text-center mb-4">
+                    <button id="gemini-case-study-button" onclick="generateCaseStudy()" class="gemini-button font-bold py-2 px-6 rounded-lg">Generar Caso de Estudio para Reforzar</button>
+                </div>
+                <div id="case-study-content" class="p-4 border rounded-lg bg-gray-50 min-h-[100px]">
+                    <div id="case-study-spinner" class="hidden justify-center items-center py-8">
+                        <div class="spinner"></div>
+                    </div>
+                    <p id="case-study-text" class="text-gray-700 whitespace-pre-wrap"></p>
+                    <div id="case-study-sources" class="mt-4 pt-3 border-t"></div>
+                </div>
+                <div id="case-study-answers-container" class="mt-4 text-center hidden">
+                    <button id="gemini-reveal-answers-button" onclick="revealCaseStudyAnswers()" class="gemini-button font-bold py-2 px-6 rounded-lg">✨ Revelar y Explicar Respuestas</button>
+                    <div id="case-study-answers-content" class="hidden mt-4 p-4 border rounded-lg bg-gray-50 text-left">
+                         <div id="case-study-answers-spinner" class="hidden justify-center items-center py-8">
+                            <div class="spinner"></div>
+                        </div>
+                        <p id="case-study-answers-text" class="text-gray-700 whitespace-pre-wrap"></p>
+                    </div>
+                </div>
+             </div>
+
+             <p class="text-sm text-gray-500 mt-8">Puedes cerrar esta ventana.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- DATABASE ---
+        const studentCodes = {
+            "CESARINA SOLEDAD LOPEZ FERNANDEZ": 5853,
+            "SOFIA CASTAÑEDA SUAREZ": 5849,
+            "JESUS MANUEL VEGA LOPEZ": 5850,
+            "EDGAR ALFREDO SANCHEZ LIRA": 5858,
+            "RICARDO ALEJANDRO ROMO GONZALEZ": 5854,
+            "KEVIN ANTONIO GUTIERREZ PACHECO": 5848,
+            "DIANA LAURA BAÑUELOS REYES": 5847,
+            "GEORGINA VILLALPANDO LÓPEZ": 5856,
+            "JAQUELINE GUADALUPE VERA CABRERA": 5851,
+            "MARIA SUSANA HERNANDEZ PAULA": 5852
+        };
+
+        const quizData = [
+            {
+                section: "Embriología",
+                questions: [
+                    {
+                        question: "Durante el seguimiento ecográfico de un feto de 5 meses, se observa una estructura queratinizada sobre el lecho ungueal, pero aún no es la uña definitiva. ¿En qué fase del desarrollo ungueal se encuentra y qué evento clave está por suceder?",
+                        options: [
+                            "A) Fase fibrilar, donde se definirá el pliegue proximal.",
+                            "B) Fase escamosa, donde las células de la matriz comenzarán a generar la lámina ungueal verdadera.",
+                            "C) Fase granular, donde se diferenciará el hiponiquio.",
+                            "D) Fase de placa, donde se formará el surco transversal."
+                        ],
+                        answer: "B) Fase escamosa, donde las células de la matriz comenzarán a generar la lámina ungueal verdadera.",
+                        feedback: "La opción B es la correcta. La 'falsa uña' es la queratinización del lecho. La fase escamosa es crítica porque es cuando la matriz ungueal se activa y comienza a producir la lámina definitiva que reemplazará esta estructura temporal."
+                    },
+                    {
+                        question: "Un neonato es diagnosticado con Síndrome EEC, presentando malformaciones en manos y pies, incluyendo uñas displásicas. Este síndrome se asocia a mutaciones en un gen crucial para la cresta epidérmica apical. ¿Qué gen está implicado?",
+                        options: [
+                            "A) SHH, responsable de la polaridad del miembro.",
+                            "B) WNT7a, implicado en la dorsalización.",
+                            "C) p63, esencial para la integridad de la cresta epidérmica apical.",
+                            "D) FGF, que regula la proliferación celular."
+                        ],
+                        answer: "C) p63, esencial para la integridad de la cresta epidérmica apical.",
+                        feedback: "La opción C es correcta. El gen p63 es un factor de transcripción maestro para el desarrollo ectodérmico. Su función en la cresta epidérmica apical es indispensable para la correcta formación de las extremidades, incluyendo la piel y sus apéndices como las uñas."
+                    },
+                     {
+                        question: "En un estudio sobre el desarrollo fetal, se observa que alrededor de la semana 17 la uña ya cubre la mayor parte del lecho. ¿Qué evento clave ocurrió aproximadamente en la semana 14 para permitir este crecimiento?",
+                        options: [
+                            "A) La formación del esbozo de la lámina ungueal.",
+                            "B) La constitución definitiva de la matriz ungueal.",
+                            "C) La emergencia de la lámina ungueal desde debajo del pliegue proximal.",
+                            "D) La queratinización completa del hiponiquio."
+                        ],
+                        answer: "C) La emergencia de la lámina ungueal desde debajo del pliegue proximal.",
+                        feedback: "La opción C es correcta. Siguiendo la cronología del desarrollo, después de que la matriz se forma y comienza a producir la lámina, el evento clave es la emergencia visible de esta lámina, que luego crece distalmente para cubrir el lecho."
+                    },
+                    {
+                        question: "Un investigador estudia la señalización molecular en el desarrollo ungueal. Observa que la vía de Wnt7a es fundamental para el establecimiento del eje dorso-ventral del miembro. ¿Qué consecuencia directa tiene esta vía en la formación de la uña?",
+                        options: [
+                            "A) Determina el grosor final de la lámina ungueal.",
+                            "B) Es necesaria para la formación del lecho ungueal vascularizado.",
+                            "C) Induce la formación de la matriz ungueal en la cara dorsal del dedo.",
+                            "D) Controla la apoptosis en el pulpejo para dar forma al dedo."
+                        ],
+                        answer: "C) Induce la formación de la matriz ungueal en la cara dorsal del dedo.",
+                        feedback: "La opción C es la correcta. La señalización de Wnt7a en el ectodermo dorsal es el 'interruptor' que le dice a esa región del dedo que debe diferenciarse en estructuras dorsales, como la matriz ungueal, en lugar de en piel plantar."
+                    }
+                ]
+            },
+            {
+                section: "Anatomía",
+                questions: [
+                   {
+                        question: "Durante una matricectomía por onicocriptosis, el cirujano debe asegurarse de eliminar por completo las extensiones laterales de la matriz para evitar la recurrencia. ¿Cómo se denominan estas proyecciones y por qué es crucial su extirpación?",
+                        options: [
+                            "A) Lúnulas laterales; porque producen el color de la uña.",
+                            "B) Cuernos de la matriz; porque son tejido germinal que produce los bordes de la uña.",
+                            "C) Pliegues periungueales; porque anclan la uña al dedo.",
+                            "D) Bandas onicodérmicas; porque sellan el espacio subungueal."
+                        ],
+                        answer: "B) Cuernos de la matriz; porque son tejido germinal que produce los bordes de la uña.",
+                        feedback: "La opción B es la correcta. Los 'cuernos' son las partes más laterales de la matriz productora de uña. Si se deja algún resto, seguirá generando una espícula de uña que causará la recurrencia de la onicocriptosis."
+                    },
+                    {
+                        question: "Al realizar una biopsia de la matriz ungueal, se debe tener cuidado de no profundizar excesivamente para no dañar una estructura tendinosa importante que se inserta cerca de su base. ¿A qué tendón nos referimos?",
+                        options: [
+                            "A) Tendón del flexor largo del hallux.",
+                            "B) Tendón del extensor largo de los dedos.",
+                            "C) Tendón del tibial anterior.",
+                            "D) Tendón de Aquiles."
+                        ],
+                        answer: "B) Tendón del extensor largo de los dedos.",
+                        feedback: "La opción B es la correcta. Las fibras del tendón extensor se insertan en la falange distal, muy cerca de la base de la matriz ungueal. Una biopsia o cirugía demasiado agresiva en esta zona podría lesionarlo."
+                    },
+                    {
+                        question: "Un paciente sufre un traumatismo por aplastamiento en el primer ortejo. Para evaluar la viabilidad del aparato ungueal, es crucial entender su irrigación. ¿Cuál de las siguientes opciones describe correctamente la vascularización de la matriz y el lecho?",
+                        options: [
+                            "A) Una única arteria digital que se ramifica en el pulpejo.",
+                            "B) Una arcada proximal para la matriz y una arcada distal para el lecho ungueal.",
+                            "C) Irrigación directa desde los vasos de la falange distal.",
+                            "D) Un plexo venoso superficial sin un componente arterial definido."
+                        ],
+                        answer: "B) Una arcada proximal para la matriz y una arcada distal para el lecho ungueal.",
+                        feedback: "La opción B describe correctamente la anatomía vascular. Las arterias digitales forman dos arcadas anastomóticas: una proximal que irriga la matriz (vital para el crecimiento) y una distal para el lecho y el hiponiquio."
+                    },
+                    {
+                        question: "Un paciente presenta una pigmentación oscura (melanoniquia) en la uña. Para realizar una biopsia y determinar si hay atipia, se debe tomar muestra del tejido donde residen los melanocitos. ¿En qué estructura del aparato ungueal se encuentran principalmente estas células?",
+                        options: [
+                            "A) En el eponiquio (cutícula).",
+                            "B) En el lecho ungueal, de forma difusa.",
+                            "C) En la matriz ungueal.",
+                            "D) En el hiponiquio."
+                        ],
+                        answer: "C) En la matriz ungueal.",
+                        feedback: "La opción C es la correcta. La matriz es donde se encuentran los melanocitos que producen el pigmento (melanina) y lo transfieren a las células de la uña (onicocitos) a medida que esta se forma. Por eso, una biopsia por melanoniquia debe incluir tejido matricial."
+                    }
+                ]
+            },
+            {
+                section: "Patología Ungueal",
+                questions: [
+                    {
+                        question: "Un paciente con psoriasis severa acude a consulta por presentar múltiples depresiones puntiformes en sus uñas, similar a un 'dedal'. ¿Qué proceso fisiopatológico en la matriz ungueal explica la formación de este 'pitting'?",
+                        options: [
+                            "A) Una inflamación crónica que causa adelgazamiento general de la uña.",
+                            "B) Focos de queratinización anormal (paraqueratosis) en la matriz proximal que se desprenden.",
+                            "C) Ruptura de pequeños capilares en el lecho, formando hemorragias.",
+                            "D) Hiperproliferación de la matriz que resulta en un engrosamiento irregular."
+                        ],
+                        answer: "B) Focos de queratinización anormal (paraqueratosis) en la matriz proximal que se desprenden.",
+                        feedback: "La opción B es correcta. El pitting psoriásico ocurre cuando pequeños focos de células en la matriz proximal queratinizan de forma defectuosa. Estas células paraqueratósicas no se compactan bien y se desprenden de la superficie de la uña a medida que crece, dejando las depresiones."
+                    },
+                    {
+                        question: "Un paciente de 65 años, fumador, presenta una onicolisis (separación de la uña del lecho) en un solo dedo que no responde a tratamientos para hongos ni mejora con cuidados generales. La lesión progresa lentamente y presenta hiperqueratosis subungueal. ¿Qué patología grave se debe sospechar?",
+                        options: [
+                            "A) Verruga subungueal.",
+                            "B) Exostosis subungueal.",
+                            "C) Carcinoma escamoso subungueal.",
+                            "D) Psoriasis ungueal localizada."
+                        ],
+                        answer: "C) Carcinoma escamoso subungueal.",
+                        feedback: "La opción C es correcta. Una onicolisis crónica, unilateral y que no responde a tratamientos convencionales, especialmente en un paciente mayor con factores de riesgo, debe hacer levantar una alta sospecha de carcinoma escamoso subungueal."
+                    },
+                    {
+                        question: "Una paciente presenta una banda roja longitudinal (eritroniquia) en el segundo dedo, con una fisura distal en 'V' e hiperqueratosis. La dermatoscopia no muestra vasos atípicos. ¿Cuál es el tumor benigno más frecuentemente asociado a esta tríada clínica?",
+                        options: [
+                            "A) Tumor glómico.",
+                            "B) Onicopapiloma.",
+                            "C) Fibroqueratoma.",
+                            "D) Quiste mixoide."
+                        ],
+                        answer: "B) Onicopapiloma.",
+                        feedback: "La opción B es la correcta. La combinación de eritroniquia, fisura distal e hiperqueratosis subungueal es altamente específica para el onicopapiloma, un tumor benigno del epitelio de la matriz distal y el lecho ungueal."
+                    },
+                    {
+                        question: "Un paciente llega a urgencias tras un traumatismo severo en el dedo, presentando un desprendimiento completo de la lámina ungueal desde su base (onicomadesis). ¿Qué grado de afectación de la matriz implica este signo clínico?",
+                        options: [
+                            "A) Una afectación leve y transitoria de la matriz proximal.",
+                            "B) Una injuria severa que causó una detención completa y temporal de la función de toda la matriz.",
+                            "C) Un daño exclusivo del lecho ungueal, sin compromiso de la matriz.",
+                            "D) Una alteración crónica de la matriz distal."
+                        ],
+                        answer: "B) Una injuria severa que causó una detención completa y temporal de la función de toda la matriz.",
+                        feedback: "La opción B es la correcta. La onicomadesis es la expresión máxima de una detención de la actividad matricial. La injuria (traumática, infecciosa, sistémica) fue lo suficientemente severa como para que la matriz dejara de producir uña por completo, causando una fractura transversal en toda la lámina."
+                    },
+                    {
+                        question: "Un paciente de fototipo II (piel clara) presenta una única banda de pigmento oscuro, de 4 mm de ancho, en el hallux, con variación de color y pigmentación del pliegue proximal (signo de Hutchinson). ¿Cuál es el diagnóstico más probable y la acción a seguir?",
+                        options: [
+                            "A) Hematoma subungueal; observar evolución.",
+                            "B) Nevo de la unión; control fotográfico anual.",
+                            "C) Melanoma subungueal; requiere biopsia urgente.",
+                            "D) Activación melanocítica benigna; tranquilizar al paciente."
+                        ],
+                        answer: "C) Melanoma subungueal; requiere biopsia urgente.",
+                        feedback: "La opción C es la correcta. La presencia de una banda pigmentada única, ancha, con varios colores y, sobre todo, el signo de Hutchinson en un paciente de piel clara, son todos signos de alta sospecha de melanoma. La biopsia de la matriz es mandatoria."
+                    },
+                    {
+                        question: "Una madre te consulta por las 'manchitas blancas' en las uñas de su hijo, preocupada por una deficiencia de calcio. ¿Cuál es la explicación fisiopatológica correcta para esta leuconiquia punctata?",
+                        options: [
+                            "A) Son burbujas de aire atrapadas en la lámina.",
+                            "B) Es un signo de deficiencia de zinc.",
+                            "C) Son focos de queratinización defectuosa (paraqueratosis) en la matriz por microtraumas.",
+                            "D) Indican una infección fúngica superficial."
+                        ],
+                        answer: "C) Son focos de queratinización defectuosa (paraqueratosis) en la matriz por microtraumas.",
+                        feedback: "La opción C es la más precisa. La leuconiquia punctata no se debe a falta de calcio ni a burbujas de aire (mitos comunes). Se produce por microtraumatismos en la matriz que alteran la queratinización, dejando células con núcleo (paraqueratósicas) que se ven blancas."
+                    }
+                ]
+            },
+            {
+                section: "Técnicas Anestésicas",
+                questions: [
+                    {
+                        question: "Vas a realizar una matricectomía en el hallux. Para asegurar una anestesia completa con un bloqueo digital proximal, recuerdas que los nervios en este dedo tienen una disposición más plantar. ¿Qué maniobra es indispensable en tu técnica?",
+                        options: [
+                            "A) Usar un mayor volumen de anestésico que en otros dedos.",
+                            "B) Inyectar solo en el dorso para evitar la arteria plantar.",
+                            "C) Infiltrar profundo hasta la cara plantar y luego bloquear las ramas dorsales bajo el tendón extensor.",
+                            "D) Realizar la punción a nivel de la articulación interfalángica."],
+                        answer: "C) Infiltrar profundo hasta la cara plantar y luego bloquear las ramas dorsales bajo el tendón extensor.",
+                        feedback: "La opción C describe la técnica correcta. Es crucial asegurar que el anestésico llegue a la cara plantar y luego bloquear las ramas dorsales para lograr una anestesia completa y exitosa del hallux."
+                    },
+                    {
+                        question: "Un niño llega a urgencias con un hematoma subungueal a tensión muy doloroso que requiere drenaje inmediato. Para minimizar el dolor y el tiempo, ¿cuál es la técnica anestésica de elección por su rapidez de acción?",
+                        options: [
+                            "A) Bloqueo del nervio tibial posterior.",
+                            "B) Bloqueo digital proximal.",
+                            "C) Bloqueo digital distal (infiltración de los pliegues periungueales).",
+                            "D) Anestesia tópica con cloruro de etilo."
+                        ],
+                        answer: "C) Bloqueo digital distal (infiltración de los pliegues periungueales).",
+                        feedback: "La opción C es la ideal. El bloqueo distal actúa sobre las terminaciones nerviosas de forma casi instantánea, proporcionando una anestesia rápida y efectiva para procedimientos urgentes y localizados en la uña."
+                    },
+                    {
+                        question: "Estás realizando una biopsia de matriz y realizas una inyección submatricial. Inyectas lentamente el anestésico y observas que la zona de la lúnula se vuelve pálida. ¿Qué significa este signo clínico?",
+                        options: [
+                            "A) Que has inyectado en la articulación.",
+                            "B) Que la infiltración es correcta, ya que el líquido comprime los capilares.",
+                            "C) Que estás causando una reacción alérgica local.",
+                            "D) Que has puncionado la falange distal."
+                        ],
+                        answer: "B) Que la infiltración es correcta, ya que el líquido comprime los capilares.",
+                        feedback: "La opción B es la correcta. La palidez isquémica en la lúnula es el signo visual de que el anestésico está en el plano correcto, entre la matriz y el hueso, asegurando una anestesia efectiva para el procedimiento."
+                    },
+                    {
+                        question: "Un paciente requiere el desbridamiento de lesiones ulcerosas en la cara plantar de los cinco dedos del pie. Para maximizar la comodidad del paciente y la eficiencia del procedimiento, ¿qué bloqueo nervioso único sería el más apropiado?",
+                        options: [
+                            "A) Bloqueo del nervio safeno.",
+                            "B) Cinco bloqueos digitales proximales individuales.",
+                            "C) Bloqueo del nervio tibial posterior a nivel del tobillo.",
+                            "D) Bloqueo del nervio peroneo superficial."],
+                        answer: "C) Bloqueo del nervio tibial posterior a nivel del tobillo.",
+                        feedback: "La opción C es la más eficiente. El nervio tibial posterior inerva la mayor parte de la planta del pie. Un solo bloqueo en el túnel del tarso puede anestesiar toda la zona, evitando múltiples y dolorosas inyecciones."
+                    },
+                    {
+                        question: "Durante un bloqueo digital, aspiras antes de inyectar y obtienes sangre en la jeringa, indicando una punción intravascular. Además del hematoma, ¿cuál es el riesgo sistémico más grave si inyectaras el anestésico?",
+                        options: [
+                            "A) Necrosis del dedo.",
+                            "B) Una infección severa.",
+                            "C) Toxicidad cardiovascular o del sistema nervioso central.",
+                            "D) Falla del bloqueo anestésico."
+                        ],
+                        answer: "C) Toxicidad cardiovascular o del sistema nervioso central.",
+                        feedback: "La opción C es correcta. La inyección intravascular de un anestésico local puede causar toxicidad sistémica, con efectos graves como arritmias cardíacas o convulsiones. Por eso la aspiración es un paso de seguridad fundamental."
+                    },
+                    {
+                        question: "Te preparas para una matricectomía química con fenol en un paciente con onicocriptosis. Después de la avulsión parcial y la exéresis del tejido de granulación, aplicas un torniquete y esperas a que el campo esté exangüe. ¿Por qué es este paso tan crucial para el éxito del procedimiento?",
+                        options: [
+                            "A) Para disminuir la inflamación postoperatoria.",
+                            "B) Para prevenir que la sangre inactive el fenol, lo que causaría un fallo en la cauterización.",
+                            "C) Para asegurar que el anestésico local siga haciendo efecto.",
+                            "D) Para reducir el riesgo de infección post-quirúrgica."
+                        ],
+                        answer: "B) Para prevenir que la sangre inactive el fenol, lo que causaría un fallo en la cauterización.",
+                        feedback: "La opción B es la correcta. El fenol actúa coagulando las proteínas del tejido. La sangre es rica en proteínas, y si está presente, neutralizará el fenol antes de que pueda destruir eficazmente la matriz, llevando a una alta probabilidad de recurrencia."
+                    }
+                ]
+            }
+        ];
+
+        // --- GLOBAL VARIABLES ---
+        const flatQuizData = quizData.flatMap(section => 
+            section.questions.map(q => ({ ...q, section: section.section }))
+        );
+        let participantName = '';
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(flatQuizData.length).fill(null);
+        let caseStudyCache = { text: '', sources: [], questions: '' };
+
+        // --- DOM ELEMENTS ---
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const reviewScreen = document.getElementById('review-screen');
+        const finalScreen = document.getElementById('final-screen');
+        const studentNameSelect = document.getElementById('studentName');
+        const studentCodeContainer = document.getElementById('student-code-container');
+        const studentCodeInput = document.getElementById('studentCode');
+        const actionButtons = document.getElementById('action-buttons');
+        const statusMessage = document.getElementById('status-message');
+        const questionNumberEl = document.getElementById('question-number');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const progressBar = document.getElementById('progress-bar');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const nextButton = document.getElementById('next-button');
+        const currentSectionEl = document.getElementById('current-section');
+
+        // --- EVENT LISTENERS ---
+        studentNameSelect.addEventListener('change', () => {
+            studentCodeContainer.classList.remove('hidden');
+            studentCodeInput.value = '';
+            checkExamStatus();
+        });
+
+        studentCodeInput.addEventListener('input', validateCode);
+        
+        // --- Anti-Cheat and State Management ---
+        function checkExamStatus() {
+            const selectedName = studentNameSelect.value;
+            if (!selectedName) return;
+
+            const matricula = studentCodes[selectedName];
+            const completedKey = 'exam_completed_' + matricula;
+            const stateKey = 'exam_state_' + matricula;
+            
+            const isCompleted = localStorage.getItem(completedKey);
+            const savedState = localStorage.getItem(stateKey);
+
+            studentCodeInput.disabled = false;
+            statusMessage.textContent = '';
+            actionButtons.innerHTML = `<button id="start-button" onclick="validateAndStart()" class="start-button w-full text-white font-bold py-4 px-10 rounded-lg text-xl" disabled>Comenzar Examen</button>`;
+            
+            if (isCompleted) {
+                statusMessage.textContent = 'Este examen ya ha sido completado y registrado.';
+                statusMessage.style.color = 'var(--success)';
+                studentCodeInput.disabled = true;
+                actionButtons.querySelector('button').disabled = true;
+            } else if (savedState) {
+                statusMessage.textContent = 'Hemos detectado un examen sin finalizar.';
+                statusMessage.style.color = 'var(--colegio-gold)';
+                actionButtons.innerHTML = `<button onclick="resumeExam()" class="start-button resume-button w-full font-bold py-4 px-10 rounded-lg text-xl">Continuar Examen</button>`;
+                studentCodeInput.disabled = true;
+            } else {
+                 validateCode();
+            }
+        }
+        
+        function resumeExam() {
+            const selectedName = studentNameSelect.value;
+            const matricula = studentCodes[selectedName];
+            const stateKey = 'exam_state_' + matricula;
+            const savedState = JSON.parse(localStorage.getItem(stateKey));
+
+            if (savedState) {
+                participantName = savedState.participantName;
+                currentQuestionIndex = savedState.currentQuestionIndex;
+                userAnswers = savedState.userAnswers;
+                
+                startScreen.classList.add('hidden');
+                quizScreen.classList.remove('hidden');
+                totalQuestionsEl.textContent = flatQuizData.length;
+                showQuestion();
+            }
+        }
+
+        function saveProgress() {
+            if (!participantName) return;
+            const matricula = studentCodes[participantName];
+            const stateKey = 'exam_state_' + matricula;
+            const state = {
+                participantName,
+                currentQuestionIndex,
+                userAnswers
+            };
+            localStorage.setItem(stateKey, JSON.stringify(state));
+        }
+
+
+        // --- GEMINI API SETUP ---
+        // IMPORTANTE: Pega aquí tu clave de la API de Gemini
+        // Obtén una clave gratuita desde Google AI Studio: https://aistudio.google.com/app/apikey
+        const GEMINI_API_KEY = ""; 
+
+        async function callGroundedGemini(prompt, systemPrompt) {
+            // This model is updated to a generally available one for long-term stability.
+            const model = "gemini-1.5-flash-latest";
+            if (!GEMINI_API_KEY) {
+                return {
+                    text: "Error: La clave de la API de Gemini no ha sido configurada. Por favor, añádela en la variable 'GEMINI_API_KEY' dentro del código.",
+                    sources: []
+                };
+            }
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                tools: [{ "google_search": {} }],
+            };
+
+            if (systemPrompt) {
+                payload.systemInstruction = { parts: [{ text: systemPrompt }] };
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate?.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    const groundingMetadata = candidate.groundingMetadata;
+                    const sources = (groundingMetadata?.groundingAttributions || []).map(attr => ({
+                        uri: attr.web?.uri,
+                        title: attr.web?.title
+                    })).filter(s => s.uri && s.title);
+                    return { text, sources };
+                } else {
+                    console.warn("API response structure might have changed or was empty:", result);
+                    let errorMessage = "No se recibió una respuesta válida de la API.";
+                    if (candidate && candidate.finishReason === 'SAFETY') {
+                        errorMessage = "La respuesta fue bloqueada por políticas de seguridad. Intenta reformular la solicitud.";
+                    }
+                    return { text: errorMessage, sources: [] };
+                }
+            } catch (error) {
+                console.error("Gemini API call failed:", error);
+                return {
+                    text: "Lo siento, no se pudo generar la respuesta en este momento. Por favor, revisa la consola para más detalles.",
+                    sources: []
+                };
+            }
+        }
+
+
+        // --- QUIZ LOGIC ---
+        function validateCode() {
+            const selectedName = studentNameSelect.value;
+            const enteredCode = parseInt(studentCodeInput.value, 10);
+            const isCompleted = localStorage.getItem('exam_completed_' + studentCodes[selectedName]);
+            
+            const startBtn = document.getElementById('start-button');
+            if (startBtn) {
+                startBtn.disabled = !(selectedName && enteredCode && studentCodes[selectedName] === enteredCode && !isCompleted);
+            }
+        }
+
+        function validateAndStart() {
+            const selectedName = studentNameSelect.value;
+            const enteredCode = parseInt(studentCodeInput.value, 10);
+            const matricula = studentCodes[selectedName];
+            const stateKey = 'exam_state_' + matricula;
+
+            if (localStorage.getItem('exam_completed_' + matricula) || localStorage.getItem(stateKey)) {
+                 alert('Este examen ya fue iniciado o completado y no puede ser reiniciado desde cero.');
+                 return;
+            }
+
+            if (studentCodes[selectedName] === enteredCode) {
+                startQuiz();
+            } else {
+                alert('El número de matrícula es incorrecto. Por favor, verifícalo.');
+            }
+        }
+
+        function startQuiz() {
+            participantName = studentNameSelect.value;
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            totalQuestionsEl.textContent = flatQuizData.length;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = flatQuizData[currentQuestionIndex];
+            questionNumberEl.textContent = currentQuestionIndex + 1;
+            currentSectionEl.textContent = question.section;
+            progressBar.style.width = `${((currentQuestionIndex) / flatQuizData.length) * 100}%`;
+            questionTextEl.textContent = question.question;
+            
+            optionsContainer.innerHTML = '';
+            nextButton.disabled = userAnswers[currentQuestionIndex] === null;
+            
+            nextButton.textContent = (currentQuestionIndex === flatQuizData.length - 1) ? 'Finalizar Examen' : 'Siguiente';
+
+            const optionsHtml = question.options.map((option, index) =>
+                `<button class="quiz-option w-full text-left p-4 border-2 rounded-lg text-lg ${userAnswers[currentQuestionIndex] === index ? 'selected' : ''}" onclick="selectAnswer(${index}, this)">
+                    <span class="font-bold mr-3">${String.fromCharCode(65 + index)}</span> ${option}
+                </button>`
+            ).join('');
+            optionsContainer.innerHTML = optionsHtml;
+        }
+
+        function selectAnswer(index, button) {
+            userAnswers[currentQuestionIndex] = index;
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            nextButton.disabled = false;
+        }
+
+        function nextQuestion() {
+            if (userAnswers[currentQuestionIndex] === null) return;
+            
+            saveProgress();
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < flatQuizData.length) {
+                showQuestion();
+            } else {
+                progressBar.style.width = '100%';
+                nextButton.disabled = true;
+                setTimeout(showReviewScreen, 300);
+            }
+        }
+
+        function showReviewScreen() {
+            quizScreen.classList.add('hidden');
+            reviewScreen.classList.remove('hidden');
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.innerHTML = '';
+
+            flatQuizData.forEach((question, index) => {
+                const userAnswerIndex = userAnswers[index];
+                const isCorrect = question.options[userAnswerIndex] === question.answer;
+                const borderClass = isCorrect ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50';
+                reviewContainer.innerHTML += `
+                    <div class="p-4 border rounded-lg ${borderClass}">
+                        <p class="font-bold text-gray-800">${question.question}</p>
+                        <p class="mt-2 text-sm">Tu respuesta: <span class="font-semibold">${question.options[userAnswerIndex] || 'No respondida'}</span></p>
+                        ${!isCorrect ? `<p class="text-sm">Respuesta Correcta: <span class="font-semibold text-green-700">${question.answer}</span></p>` : ''}
+                        <div class="mt-2 p-3 bg-white rounded-md border text-sm text-gray-700">
+                            <p><span class="font-bold" style="color:var(--colegio-medium-blue)">Explicación:</span> ${question.feedback}</p>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        async function generateCaseStudy() {
+            const button = document.getElementById('gemini-case-study-button');
+            const spinner = document.getElementById('case-study-spinner');
+            const textEl = document.getElementById('case-study-text');
+            const sourcesEl = document.getElementById('case-study-sources');
+            const answersContainer = document.getElementById('case-study-answers-container');
+
+            button.disabled = true;
+            spinner.classList.remove('hidden');
+            spinner.classList.add('flex');
+            textEl.textContent = '';
+            sourcesEl.innerHTML = '';
+            answersContainer.classList.add('hidden');
+            document.getElementById('case-study-answers-content').classList.add('hidden');
+
+            const incorrectTopics = new Set();
+            userAnswers.forEach((answer, index) => {
+                if (flatQuizData[index].options[answer] !== flatQuizData[index].answer) {
+                    incorrectTopics.add(flatQuizData[index].section);
+                }
+            });
+
+            const topics = Array.from(incorrectTopics).join(', ');
+            const systemPrompt = "Eres un profesor experto en podiatría creando un caso clínico para un estudiante. Basado en los siguientes temas, crea un caso práctico y conciso (150-200 palabras) que presente un escenario de un paciente. Basa tu respuesta en conocimiento de fuentes académicas y guías clínicas (como JAPMA, UpToDate, o libros de texto de podiatría). Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione.";
+            const userPrompt = `Temas a reforzar: ${topics}. Por favor, genera el caso de estudio.`;
+
+            const result = await callGroundedGemini(userPrompt, systemPrompt);
+            
+            const fullText = result.text;
+            const questionRegex = /(Pregunta[s]? \d+[:.].*|\¿.*?\?)/gi;
+            const questions = fullText.match(questionRegex);
+            
+            caseStudyCache = {
+                text: fullText,
+                sources: result.sources,
+                questions: questions ? questions.join('\n') : ''
+            };
+            
+            textEl.textContent = fullText;
+            
+            if (result.sources && result.sources.length > 0) {
+                let sourcesHtml = '<h4 class="font-bold text-sm mb-2" style="color:var(--colegio-dark-blue)">Fuentes Consultadas:</h4><ul class="list-disc pl-5 text-sm">';
+                result.sources.forEach(source => {
+                    sourcesHtml += `<li><a href="${source.uri}" target="_blank" class="text-blue-600 hover:underline">${source.title}</a></li>`;
+                });
+                sourcesHtml += '</ul>';
+                sourcesEl.innerHTML = sourcesHtml;
+            }
+
+            spinner.classList.add('hidden');
+            spinner.classList.remove('flex');
+            
+            if (caseStudyCache.questions) {
+                answersContainer.classList.remove('hidden');
+                document.getElementById('gemini-reveal-answers-button').disabled = false;
+                document.getElementById('case-study-answers-content').classList.add('hidden');
+            }
+        }
+
+        async function revealCaseStudyAnswers() {
+            const button = document.getElementById('gemini-reveal-answers-button');
+            const answersContent = document.getElementById('case-study-answers-content');
+            const spinner = document.getElementById('case-study-answers-spinner');
+            const textEl = document.getElementById('case-study-answers-text');
+
+            button.disabled = true;
+            answersContent.classList.remove('hidden');
+            spinner.classList.remove('hidden');
+            spinner.classList.add('flex');
+            textEl.textContent = '';
+
+            const systemPrompt = "Eres un profesor experto en podiatría. Responde de forma clara y fundamentada las siguientes preguntas, basándote en el caso clínico proporcionado. Explica el razonamiento clínico detrás de cada respuesta.";
+            const userPrompt = `
+                Basado en el siguiente caso clínico:
+                ---
+                ${caseStudyCache.text}
+                ---
+                Responde y explica las siguientes preguntas:
+                ${caseStudyCache.questions}
+            `;
+            
+            const result = await callGroundedGemini(userPrompt, systemPrompt);
+            textEl.textContent = result.text;
+            
+            spinner.classList.add('hidden');
+            spinner.classList.remove('flex');
+        }
+
+        function showFinalResult() {
+            reviewScreen.classList.add('hidden');
+            finalScreen.classList.remove('hidden');
+
+            let correctAnswers = 0;
+            let hasIncorrectAnswers = false;
+            userAnswers.forEach((answer, index) => {
+                 if (flatQuizData[index].options[answer] === flatQuizData[index].answer) {
+                    correctAnswers++;
+                } else {
+                    hasIncorrectAnswers = true;
+                }
+            });
+            
+            const totalQuestions = flatQuizData.length;
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            
+            const matricula = studentCodes[participantName];
+            const completedKey = 'exam_completed_' + matricula;
+            const stateKey = 'exam_state_' + matricula;
+
+            localStorage.setItem(completedKey, 'true');
+            localStorage.removeItem(stateKey);
+
+            sendToBackend(participantName, correctAnswers, totalQuestions);
+            
+            document.getElementById('result-name').textContent = participantName;
+            document.getElementById('score-text').textContent = `${correctAnswers} / ${totalQuestions}`;
+            
+            const resultBox = document.getElementById('result-box');
+            const feedbackText = document.getElementById('feedback-text');
+            
+            if (percentage >= 80) {
+                resultBox.style.backgroundColor = 'var(--success-bg)';
+                resultBox.style.color = 'var(--success)';
+                feedbackText.textContent = '¡Excelente trabajo! Has demostrado un conocimiento sobresaliente.';
+            } else if (percentage >= 60) {
+                resultBox.style.backgroundColor = 'var(--warning-bg)';
+                resultBox.style.color = 'var(--warning)';
+                feedbackText.textContent = '¡Buen esfuerzo! Has finalizado el curso.';
+            } else {
+                resultBox.style.backgroundColor = 'var(--danger-bg)';
+                resultBox.style.color = 'var(--danger)';
+                feedbackText.textContent = 'Resultado no aprobatorio. Revisa las explicaciones para identificar áreas de oportunidad.';
+            }
+
+            if (hasIncorrectAnswers) {
+                document.getElementById('gemini-case-study-container').classList.remove('hidden');
+            }
+        }
+
+        function sendToBackend(name, score, total) {
+            // This is a placeholder for sending data to a backend.
+            // For Netlify, you would use a Netlify Function.
+            console.log(`--- SIMULACIÓN DE ENVÍO A BACKEND ---`);
+            console.log(`Nombre: ${name}`);
+            console.log(`Calificación: ${score} de ${total}`);
+        }
+
+        // Initial check when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+             checkExamStatus();
+        });
+    </script>
+</body>
+</html>
+
