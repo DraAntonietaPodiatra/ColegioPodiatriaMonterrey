@@ -21,16 +21,18 @@
 }
 
 .platform-info h3 {
-    color: var(--colegio-dark-blue);
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 5px;
+    color: var(--colegio-gold);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 3px 0;
+    line-height: 1.1;
+    text-align: center;
 }
 
 .platform-subtitle {
     color: var(--colegio-gold);
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 500;
     margin-bottom: 3px;
 }
 
@@ -182,6 +184,11 @@
 .score-cell.not-taken {
     color: #aaa;
     font-style: italic;
+}
+
+.score-cell.excellent {
+    background-color: #cff4fc;
+    color: #0f5132;
 }
 
 /* --- ESTILOS PARA GRÁFICOS --- */
