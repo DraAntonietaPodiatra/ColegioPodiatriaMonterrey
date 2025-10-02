@@ -98,22 +98,23 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hasCompletions) completedExams++;
         });
         
-        // Contar estudiantes únicos (que han completado al menos un examen)
-        let uniqueStudents = 0;
+        // Contar total de calificaciones individuales
+        let totalGrades = 0;
         data.forEach(student => {
-            const hasCompletedAny = examColumns.some(exam => {
+            examColumns.forEach(exam => {
                 const score = student[exam];
-                return score && String(score).trim() !== '' && !String(score).includes('-');
+                if (score && String(score).trim() !== '' && !String(score).includes('-')) {
+                    totalGrades++;
+                }
             });
-            if (hasCompletedAny) uniqueStudents++;
         });
         
         const totalExams = completedExams;
-        const totalUniqueStudents = uniqueStudents;
+        const totalIndividualGrades = totalGrades;
 
         console.log('📝 Columnas de exámenes encontradas:', examColumns);
         console.log('📊 Exámenes completados:', completedExams);
-        console.log('👥 Estudiantes únicos:', totalUniqueStudents);
+        console.log('📊 Total de calificaciones:', totalIndividualGrades);
 
         let totalScores = 0;
         let passedScores = 0;
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`📈 Tasa de aprobación calculada: ${averagePassRate}%`);
         
         document.getElementById('total-students').textContent = completedExams;
-        document.getElementById('total-exams').textContent = totalUniqueStudents;
+        document.getElementById('total-exams').textContent = totalIndividualGrades;
         document.getElementById('average-pass-rate').textContent = `${averagePassRate}%`;
     }
     
@@ -331,13 +332,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
         tableBody.innerHTML = data.map(student => {
             const cells = headers.map(header => {
-                const value = student[header] || '-';
+                // Mapear el header de vuelta al nombre original para acceder a los datos
+                let originalHeader = header;
+                if (header === 'Fecha y Hora') originalHeader = 'Timestamp';
+                if (header === 'Nombre Alumno') originalHeader = 'Nombre_Alumno';
                 
-                if (header.startsWith('Timestamp')) {
+                const value = student[originalHeader] || '-';
+                
+                if (originalHeader === 'Timestamp') {
                     return `<td>${new Date(value).toLocaleString()}</td>`;
                 }
 
-                if (!['Nombre_Alumno', 'Matricula'].includes(header)) {
+                if (!['Nombre_Alumno', 'Matricula'].includes(originalHeader)) {
                     let scoreClass = 'not-taken';
                     if (String(value).includes('%')) {
                         const percentageMatch = String(value).match(/\((\d+\.?\d*)%\)/);
