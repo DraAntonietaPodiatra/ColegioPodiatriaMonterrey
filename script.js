@@ -224,6 +224,12 @@ document.addEventListener('DOMContentLoaded', () => {
         userName.textContent = name;
         userRole.textContent = role;
         welcomeMessage.textContent = greeting;
+        
+        // Actualizar avatar móvil
+        const mobileAvatar = document.getElementById('mobile-user-avatar');
+        if (mobileAvatar) {
+            mobileAvatar.textContent = initials.toUpperCase();
+        }
     }
 
     // Configura la navegación (puede ser adaptativa según el rol)
@@ -298,8 +304,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- FUNCIONES PARA NAVEGACIÓN MÓVIL ---
+    function setupMobileNavigation() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.querySelector('.main-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (mobileMenuBtn && sidebar && overlay) {
+            mobileMenuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('show');
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            });
+        }
+    }
+
     // --- EJECUTAR INICIALIZACIÓN ---
     init();
+    setupMobileNavigation();
 
 });
 
