@@ -114,9 +114,95 @@ body {
     display: flex;
 }
 
-/* HEADER MÓVIL (oculto por defecto) */
+/* HEADER MÓVIL */
 .mobile-header {
     display: none;
+}
+
+/* Forzar header móvil en pantallas pequeñas */
+@media (max-width: 1024px) {
+    .mobile-header {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 15px;
+        background: var(--paper);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .mobile-center {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .mobile-logo {
+        height: 35px;
+        width: auto;
+        flex-shrink: 0;
+    }
+    
+    .mobile-platform-info h4 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--colegio-dark-blue);
+        margin: 0;
+        line-height: 1.2;
+    }
+    
+    .mobile-platform-info p {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.2;
+    }
+    
+    .mobile-user-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: var(--colegio-gold);
+        color: var(--colegio-dark-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    .mobile-menu-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--colegio-dark-blue);
+        cursor: pointer;
+        padding: 8px;
+        flex-shrink: 0;
+    }
+    
+    .mobile-user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+    
+    .main-sidebar {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+        width: 100%;
+        max-width: 100%;
+    }
 }
 
 .sidebar-overlay {
