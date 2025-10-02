@@ -6,6 +6,64 @@
     <title>Examen Parcial Cirugía Ungueal - Colegio de Podiatría de Monterrey</title>
     <link rel="stylesheet" href="css/examen-base.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para móviles */
+        @media (max-width: 768px) {
+            .campo-entrada {
+                font-size: 16px !important; /* Previene zoom en iOS */
+                padding: 12px 16px !important;
+                min-height: 48px !important; /* Tamaño mínimo táctil */
+                border-radius: 8px !important;
+                border: 2px solid #e5e7eb !important;
+                background-color: #ffffff !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            select.campo-entrada {
+                appearance: none !important;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+                background-repeat: no-repeat !important;
+                background-position: right 12px center !important;
+                background-size: 20px !important;
+                padding-right: 40px !important;
+            }
+            
+            .grupo-formulario {
+                margin-bottom: 20px !important;
+            }
+            
+            .grupo-formulario label {
+                display: block !important;
+                margin-bottom: 8px !important;
+                font-weight: 600 !important;
+                color: #374151 !important;
+                font-size: 14px !important;
+            }
+            
+            /* Mejorar la visibilidad del formulario en móviles */
+            .formulario-autenticacion {
+                padding: 20px !important;
+                background: #f9fafb !important;
+                border-radius: 12px !important;
+                margin: 20px 0 !important;
+            }
+        }
+        
+        /* Estilos adicionales para pantallas muy pequeñas */
+        @media (max-width: 480px) {
+            .campo-entrada {
+                font-size: 16px !important;
+                padding: 14px 16px !important;
+                min-height: 52px !important;
+            }
+            
+            .formulario-autenticacion {
+                margin: 10px !important;
+                padding: 16px !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="examen-container">
@@ -20,7 +78,7 @@
                 <div class="formulario-autenticacion">
                     <div class="grupo-formulario">
                         <label for="studentName">1. Selecciona tu nombre:</label>
-                        <select id="studentName" class="campo-entrada" required>
+                        <select id="studentName" class="campo-entrada" required autocomplete="off">
                             <option value="" disabled selected>-- Nombre del Alumno --</option>
                             <!-- ALUMNOS DE PRUEBA (para testing - eliminar después) -->
                             <option value="Prueba 1">Prueba 1</option>
@@ -33,6 +91,11 @@
                             <option value="Prueba 8">Prueba 8</option>
                             <option value="Prueba 9">Prueba 9</option>
                             <option value="Prueba 10">Prueba 10</option>
+                            <option value="Prueba 11">Prueba 11</option>
+                            <option value="Prueba 12">Prueba 12</option>
+                            <option value="Prueba 13">Prueba 13</option>
+                            <option value="Prueba 14">Prueba 14</option>
+                            <option value="Prueba 15">Prueba 15</option>
                             <!-- ALUMNOS REALES -->
                             <option value="CESARINA SOLEDAD LOPEZ FERNANDEZ">CESARINA SOLEDAD LOPEZ FERNANDEZ</option>
                             <option value="SOFIA CASTAÑEDA SUAREZ">SOFIA CASTAÑEDA SUAREZ</option>
@@ -382,6 +445,10 @@
         };
 
         // --- FUNCIONES PARA CASO DE ESTUDIO CON GEMINI ---
+        
+        // --- CAMBIO 1: Variable para guardar las respuestas ---
+        let hiddenAnswers = '';
+        
         const GEMINI_API_KEY = "AIzaSyCdkq5Bjzp4fpyMndVKp2CZx5Be_WkEv5I"; // API key de Gemini
 
         async function callGroundedGemini(prompt, systemPrompt) {
@@ -445,13 +512,15 @@
             const textEl = document.getElementById('case-study-text');
             const sourcesEl = document.getElementById('case-study-sources');
             const answersContainer = document.getElementById('case-study-answers-container');
+            const answersContent = document.getElementById('case-study-answers-content');
 
             button.disabled = true;
             spinner.classList.remove('hidden');
             textEl.textContent = '';
             sourcesEl.innerHTML = '';
-            answersContainer.classList.add('hidden');
-            document.getElementById('case-study-answers-content').classList.add('hidden');
+            answersContainer.classList.add('hidden'); 
+            answersContent.classList.add('hidden');
+            hiddenAnswers = ''; // Limpiar respuestas anteriores
 
             // Determinar si hay errores o si es 100%
             const incorrectTopics = new Set();
@@ -480,6 +549,7 @@
                 userPrompt = `El estudiante obtuvo 100% en el examen. Genera un caso clínico avanzado sobre: ${randomTopic}. Debe ser más desafiante que las preguntas del examen.`;
             }
 
+            // --- CAMBIO 2: Modificación del System Prompt ---
             const systemPrompt = `Eres un profesor experto en podiatría creando un caso clínico para un estudiante. Basado en los siguientes temas, crea un caso práctico y conciso (150-200 palabras) que presente un escenario de un paciente realista. 
 
 Basate específicamente en estas fuentes académicas de podiatría:
@@ -502,24 +572,41 @@ REVISTAS ACADÉMICAS:
 
 Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione sobre diagnóstico diferencial, técnica quirúrgica, o manejo postoperatorio.
 
-IMPORTANTE: Las preguntas deben empezar con "Pregunta 1:" y "Pregunta 2:" para que sean detectadas correctamente por el sistema.`;
+IMPORTANTE: Las preguntas deben empezar con "Pregunta 1:" y "Pregunta 2:" para que sean detectadas correctamente por el sistema.
 
+Después de las preguntas, incluye un separador bien definido como '---RESPUESTAS---'.
+
+Finalmente, debajo del separador, escribe las respuestas detalladas y el razonamiento clínico para cada una de las preguntas que planteaste.`;
+
+            // --- CAMBIO 3: Lógica para procesar la respuesta única ---
             const result = await callGroundedGemini(userPrompt, systemPrompt);
             
             const fullText = result.text;
-            const questionRegex = /(Pregunta[s]? \d+[:.].*?[?¿]|Preguntas? de [^:]*[:.].*?[?¿]|\d+\.\s*.*?[?¿])/gi;
-            const questions = fullText.match(questionRegex);
+            const separator = '---RESPUESTAS---';
+            let caseText = fullText;
             
-            console.log('Preguntas detectadas:', questions);
+            console.log('Full API response:', fullText);
+            console.log('Looking for separator:', separator);
             
-            examen.caseStudyCache = {
-                text: fullText,
-                sources: result.sources,
-                questions: questions ? questions.join('\n') : ''
-            };
+            // Separar el caso de las respuestas
+            if (fullText.includes(separator)) {
+                const parts = fullText.split(separator);
+                caseText = parts[0];      // Parte visible: El caso y las preguntas
+                hiddenAnswers = parts[1] || "No se generaron respuestas."; // Parte oculta: Las respuestas
+                console.log('Separator found! Case text length:', caseText.length);
+                console.log('Hidden answers length:', hiddenAnswers.length);
+            } else {
+                // Fallback por si la API no sigue la instrucción
+                caseText = fullText;
+                hiddenAnswers = "No se encontraron respuestas separadas. La API podría no haber seguido la instrucción del separador.";
+                console.log('Separator NOT found. Using fallback.');
+            }
             
-            textEl.textContent = fullText;
+            // Mostrar el caso clínico, preguntas Y respuestas juntos
+            const combinedText = caseText + '\n\n' + '---RESPUESTAS---\n\n' + hiddenAnswers;
+            textEl.innerHTML = this.formatTextWithMarkdown(combinedText);
             
+            // Mostrar fuentes
             if (result.sources && result.sources.length > 0) {
                 let sourcesHtml = '<h4 class="titulo-fuentes">Fuentes Consultadas:</h4><ul class="lista-fuentes">';
                 result.sources.forEach(source => {
@@ -531,60 +618,63 @@ IMPORTANTE: Las preguntas deben empezar con "Pregunta 1:" y "Pregunta 2:" para q
 
             spinner.classList.add('hidden');
             
-            // Mostrar siempre el contenedor de respuestas cuando hay un caso de estudio
-            console.log('Mostrando contenedor de respuestas');
-            answersContainer.classList.remove('hidden');
-            document.getElementById('gemini-reveal-answers-button').disabled = false;
-            document.getElementById('case-study-answers-content').classList.add('hidden');
-            
-            if (examen.caseStudyCache.questions) {
-                console.log('Preguntas detectadas:', examen.caseStudyCache.questions);
-            } else {
-                console.log('No se detectaron preguntas específicas, pero mostrando botón de respuestas de todos modos');
-            }
+            // Ocultar el contenedor del botón ya que mostramos respuestas directamente
+            answersContainer.classList.add('hidden');
         }
 
-        async function revealCaseStudyAnswers() {
+        // --- FUNCIÓN PARA FORMATEAR TEXTO CON MARKDOWN ---
+        function formatTextWithMarkdown(text) {
+            return text
+                // Convertir **texto** a <strong>texto</strong>
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                // Convertir *texto* a <em>texto</em>
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                // Convertir saltos de línea dobles a párrafos
+                .replace(/\n\n/g, '</p><p>')
+                // Convertir saltos de línea simples a <br>
+                .replace(/\n/g, '<br>')
+                // Envolver en párrafo inicial
+                .replace(/^/, '<p>')
+                .replace(/$/, '</p>')
+                // Limpiar párrafos vacíos
+                .replace(/<p><\/p>/g, '')
+                // Formatear preguntas
+                .replace(/(Pregunta \d+:)/g, '<h4 class="pregunta-caso">$1</h4>')
+                // Formatear respuestas
+                .replace(/(Respuesta \d+:)/g, '<h4 class="respuesta-caso">$1</h4>')
+                // Formatear separador
+                .replace(/---RESPUESTAS---/g, '<hr class="separador-respuestas">')
+                // Formatear listas con viñetas
+                .replace(/^(\d+\.\s)/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        }
+
+        // --- CAMBIO 4: Función 'reveal' simplificada ---
+        // Ya no es 'async' porque no llama a la API
+        function revealCaseStudyAnswers() {
             const button = document.getElementById('gemini-reveal-answers-button');
             const answersContent = document.getElementById('case-study-answers-content');
             const spinner = document.getElementById('case-study-answers-spinner');
             const textEl = document.getElementById('case-study-answers-text');
 
-            button.disabled = true;
-            answersContent.classList.remove('hidden');
-            spinner.classList.remove('hidden');
-            textEl.textContent = '';
+            console.log('Revealing answers...');
+            console.log('hiddenAnswers content:', hiddenAnswers);
 
-            const systemPrompt = "Eres un profesor experto en podiatría. Responde de forma clara y fundamentada las siguientes preguntas, basándote en el caso clínico proporcionado. Explica el razonamiento clínico detrás de cada respuesta.";
-            
-            let userPrompt;
-            if (examen.caseStudyCache.questions) {
-                userPrompt = `
-                    Basado en el siguiente caso clínico:
-                    ---
-                    ${examen.caseStudyCache.text}
-                    ---
-                    Responde y explica las siguientes preguntas:
-                    ${examen.caseStudyCache.questions}
-                `;
+            button.disabled = true; // Deshabilitar después del primer clic
+            answersContent.classList.remove('hidden'); // Mostrar contenedor de respuestas
+            spinner.classList.add('hidden'); // Asegurarse que el spinner no se vea
+
+            // Verificar que tenemos respuestas
+            if (hiddenAnswers && hiddenAnswers.trim() !== '') {
+                textEl.textContent = hiddenAnswers;
+                console.log('Answers displayed successfully');
             } else {
-                userPrompt = `
-                    Basado en el siguiente caso clínico:
-                    ---
-                    ${examen.caseStudyCache.text}
-                    ---
-                    Analiza este caso clínico y proporciona:
-                    1. Un diagnóstico diferencial detallado
-                    2. Explicación del razonamiento clínico
-                    3. Recomendaciones de tratamiento
-                    4. Consideraciones anatómicas y embriológicas relevantes
-                `;
+                textEl.textContent = 'No se encontraron respuestas. Por favor, regenera el caso de estudio.';
+                console.log('No answers found');
             }
             
-            const result = await callGroundedGemini(userPrompt, systemPrompt);
-            textEl.textContent = result.text;
-            
-            spinner.classList.add('hidden');
+            // Asegurar que el contenedor de respuestas sea visible
+            answersContent.style.display = 'block';
         }
     </script>
 </body>
