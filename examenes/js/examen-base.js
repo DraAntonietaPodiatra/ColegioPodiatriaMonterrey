@@ -207,7 +207,7 @@ class ExamenPodiatria {
                     Por motivos de integridad académica, no se permite repetir exámenes.
                     Si crees que esto es un error, contacta a tu profesor.
                 </p>
-                <a href="../index.html" class="btn btn-primary">Volver al Dashboard</a>
+                <button onclick="window.location.href='../index.html'" class="btn btn-principal btn-completo">Volver a la Plataforma</button>
             </div>
         `;
         
