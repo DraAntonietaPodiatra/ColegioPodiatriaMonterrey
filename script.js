@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar iconos
+    lucide.createIcons();
+    
+    // Inicializar menú móvil
+    initializeMobileMenu();
+    
+    // Cargar nombres de alumnos en el select
+    populateStudentNames();
+
     // Lógica para manejar la sesión del dashboard
     const loginScreen = document.getElementById('login-screen');
     const appLayout = document.querySelector('.app-layout');
