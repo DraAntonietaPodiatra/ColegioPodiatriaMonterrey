@@ -16,10 +16,24 @@ class ExamenPodiatria {
     }
 
     async init() {
-        this.setupEventListeners();
-        await this.checkExamCompletion();
-        if (!this.examAlreadyCompleted) {
-            this.checkExamStatus();
+        // Mostrar indicador de carga inicial
+        this.showLoadingIndicator('Cargando examen...');
+        
+        try {
+            // Configurar eventos
+            this.setupEventListeners();
+            
+            // Verificar estado del examen
+            await this.checkExamCompletion();
+            
+            if (!this.examAlreadyCompleted) {
+                this.checkExamStatus();
+            }
+        } catch (error) {
+            console.error('Error durante la inicialización:', error);
+        } finally {
+            // Asegurar que el indicador de carga se oculte
+            this.hideLoadingIndicator();
         }
     }
 
@@ -75,8 +89,29 @@ class ExamenPodiatria {
             optionsContainer: document.getElementById('options-container'),
             nextButton: document.getElementById('next-button'),
             currentSectionEl: document.getElementById('current-section'),
-            examBlockedContainer: document.getElementById('exam-blocked-container')
+            examBlockedContainer: document.getElementById('exam-blocked-container'),
+            loadingIndicator: document.getElementById('loading-indicator')
         };
+    }
+
+    // --- INDICADOR DE CARGA ---
+    showLoadingIndicator(message = 'Cargando examen...') {
+        const { loadingIndicator } = this.elements;
+        if (loadingIndicator) {
+            const loadingText = loadingIndicator.querySelector('.loading-text');
+            if (loadingText) {
+                loadingText.textContent = message;
+            }
+            loadingIndicator.classList.remove('hidden');
+        }
+    }
+
+    hideLoadingIndicator() {
+        const { loadingIndicator } = this.elements;
+        console.log('Ocultando indicador de carga:', loadingIndicator);
+        if (loadingIndicator) {
+            loadingIndicator.classList.add('hidden');
+        }
     }
 
     // --- CONFIGURACIÓN DE EVENTOS ---
