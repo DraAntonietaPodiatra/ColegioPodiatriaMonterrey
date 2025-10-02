@@ -48,6 +48,25 @@
                 border-radius: 12px !important;
                 margin: 20px 0 !important;
             }
+            
+            /* Estilos para fuentes académicas */
+            .separador-fuentes {
+                border: none;
+                height: 2px;
+                background: linear-gradient(to right, #c5a473, #013b56);
+                margin: 20px 0;
+                border-radius: 1px;
+            }
+            
+            .titulo-fuentes {
+                color: #013b56;
+                font-size: 1.1rem;
+                font-weight: 700;
+                margin: 15px 0 10px 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
         }
         
         /* Estilos adicionales para pantallas muy pequeñas */
@@ -576,7 +595,15 @@ IMPORTANTE: Las preguntas deben empezar con "Pregunta 1:" y "Pregunta 2:" para q
 
 Después de las preguntas, incluye un separador bien definido como '---RESPUESTAS---'.
 
-Finalmente, debajo del separador, escribe las respuestas detalladas y el razonamiento clínico para cada una de las preguntas que planteaste.`;
+Finalmente, debajo del separador, escribe las respuestas detalladas y el razonamiento clínico para cada una de las preguntas que planteaste.
+
+Después de las respuestas, incluye otro separador como '---FUENTES---' y lista las fuentes académicas específicas que utilizaste para fundamentar el caso clínico y las respuestas, incluyendo:
+- Libros de texto relevantes
+- Artículos científicos específicos
+- Guías clínicas actualizadas
+- Protocolos de tratamiento reconocidos
+
+Formato las fuentes como una lista numerada con el formato: "1. Autor(es). Título del libro/artículo. Editorial/Revista. Año."`;
 
             // --- CAMBIO 3: Lógica para procesar la respuesta única ---
             const result = await callGroundedGemini(userPrompt, systemPrompt);
@@ -642,8 +669,10 @@ Finalmente, debajo del separador, escribe las respuestas detalladas y el razonam
                 .replace(/(Pregunta \d+:)/g, '<h4 class="pregunta-caso">$1</h4>')
                 // Formatear respuestas
                 .replace(/(Respuesta \d+:)/g, '<h4 class="respuesta-caso">$1</h4>')
-                // Formatear separador
+                // Formatear separador de respuestas
                 .replace(/---RESPUESTAS---/g, '<hr class="separador-respuestas">')
+                // Formatear separador de fuentes
+                .replace(/---FUENTES---/g, '<hr class="separador-fuentes"><h4 class="titulo-fuentes">📚 Fuentes Académicas:</h4>')
                 // Formatear listas con viñetas
                 .replace(/^(\d+\.\s)/gm, '<li>$1</li>')
                 .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
@@ -679,4 +708,3 @@ Finalmente, debajo del separador, escribe las respuestas detalladas y el razonam
     </script>
 </body>
 </html>
-
