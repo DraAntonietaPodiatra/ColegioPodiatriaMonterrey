@@ -8,14 +8,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función principal para obtener y mostrar los datos
     async function fetchAndDisplayReports() {
         try {
+            console.log('🔍 Intentando cargar datos de reportes...');
+            console.log('📡 URL:', `${SCRIPT_URL}?action=getReportData`);
+            
             const response = await fetch(`${SCRIPT_URL}?action=getReportData`);
+            console.log('📨 Respuesta recibida:', response.status, response.statusText);
+            
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
+                throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
             }
+            
             const result = await response.json();
+            console.log('📊 Datos recibidos:', result);
 
             if (result.success) {
                 const data = result.data;
+                console.log('✅ Datos procesados:', data);
+                
+                if (!data || data.length === 0) {
+                    loadingSpinner.innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <p style="color: #666; font-size: 1.2rem;">No hay datos de exámenes disponibles</p>
+                            <p style="color: #999;">Realiza algunos exámenes para ver las estadísticas aquí.</p>
+                            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--colegio-medium-blue); color: white; border: none; border-radius: 5px; cursor: pointer;">Actualizar</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
                 displayStats(data);
                 displayCharts(data);
                 displayTable(data);
@@ -28,7 +48,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error al cargar el reporte:', error);
-            loadingSpinner.innerHTML = `<p style="color: red;"><strong>Error al cargar el reporte:</strong> ${error.message}</p><p>Por favor, verifica que la URL del Apps Script es correcta, que el script está implementado y que la hoja de cálculo se llama "Calificaciones".</p>`;
+            loadingSpinner.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <p style="color: red;"><strong>Error al cargar el reporte:</strong> ${error.message}</p>
+                    <p style="color: #666;">Por favor, verifica que:</p>
+                    <ul style="text-align: left; color: #666; max-width: 400px; margin: 0 auto;">
+                        <li>La URL del Apps Script es correcta</li>
+                        <li>El script está implementado como aplicación web</li>
+                        <li>La hoja de cálculo se llama "Examenes podiatria"</li>
+                        <li>El acceso está configurado como "Cualquier usuario"</li>
+                    </ul>
+                    <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--colegio-medium-blue); color: white; border: none; border-radius: 5px; cursor: pointer;">Reintentar</button>
+                </div>
+            `;
         }
     }
     
