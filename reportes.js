@@ -80,29 +80,50 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayStats(data) {
         if (!data || data.length === 0) return;
 
+        console.log('📊 Datos para estadísticas:', data);
+
         const totalStudents = data.length;
-        const examColumns = Object.keys(data[0] || {}).filter(key => !['Timestamp', 'Nombre_Alumno', 'Matricula', ''].includes(key));
+        const examColumns = Object.keys(data[0] || {}).filter(key => 
+            !['Timestamp', 'Nombre_Alumno', 'Matricula', ''].includes(key) && 
+            key && key.trim() !== ''
+        );
         const totalExams = examColumns.length;
+
+        console.log('📝 Columnas de exámenes encontradas:', examColumns);
 
         let totalScores = 0;
         let passedScores = 0;
+        
         data.forEach(student => {
             examColumns.forEach(exam => {
                 const score = student[exam];
                 if (score && String(score).trim() !== '') {
+                    console.log(`🎯 Procesando puntuación para ${student.Nombre_Alumno || 'Alumno'} en ${exam}:`, score);
+                    
                     const percentageMatch = String(score).match(/\((\d+\.?\d*)%\)/);
                     if (percentageMatch) {
                         const percentage = parseFloat(percentageMatch[1]);
-                        if (!isNaN(percentage)) {
+                        console.log(`📈 Porcentaje extraído: ${percentage}`);
+                        
+                        if (!isNaN(percentage) && isFinite(percentage) && percentage >= 0 && percentage <= 100) {
                             totalScores++;
                             if (percentage >= 80) passedScores++;
+                        } else {
+                            console.warn(`⚠️ Porcentaje inválido detectado: ${percentage}`);
                         }
+                    } else {
+                        console.warn(`⚠️ No se pudo extraer porcentaje de: ${score}`);
                     }
                 }
             });
         });
 
-        const averagePassRate = totalScores > 0 ? ((passedScores / totalScores) * 100).toFixed(1) : 0;
+        console.log(`📊 Total scores: ${totalScores}, Passed scores: ${passedScores}`);
+
+        const averagePassRate = totalScores > 0 ? 
+            Math.min(100, Math.max(0, ((passedScores / totalScores) * 100))).toFixed(1) : 0;
+        
+        console.log(`📈 Tasa de aprobación calculada: ${averagePassRate}%`);
         
         document.getElementById('total-students').textContent = totalStudents;
         document.getElementById('total-exams').textContent = totalExams;
@@ -113,7 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayCharts(data) {
         if (!data || data.length === 0) return;
 
-        const examColumns = Object.keys(data[0] || {}).filter(key => !['Timestamp', 'Nombre_Alumno', 'Matricula', ''].includes(key));
+        console.log('📊 Datos para gráficos:', data);
+
+        const examColumns = Object.keys(data[0] || {}).filter(key => 
+            !['Timestamp', 'Nombre_Alumno', 'Matricula', ''].includes(key) && 
+            key && key.trim() !== ''
+        );
+
+        console.log('📝 Columnas para gráficos:', examColumns);
 
         const scoreDistribution = { 'Reprobado (<60%)': 0, 'Regular (60-79%)': 0, 'Aprobado (≥80%)': 0 };
         const completionData = {};
@@ -127,50 +155,86 @@ document.addEventListener('DOMContentLoaded', () => {
                     const percentageMatch = String(score).match(/\((\d+\.?\d*)%\)/);
                     if (percentageMatch) {
                         const percentage = parseFloat(percentageMatch[1]);
-                        if (!isNaN(percentage)) {
+                        console.log(`📈 Porcentaje en gráfico: ${percentage} para ${student.Nombre_Alumno || 'Alumno'} en ${exam}`);
+                        
+                        if (!isNaN(percentage) && isFinite(percentage) && percentage >= 0 && percentage <= 100) {
                             if (percentage >= 80) scoreDistribution['Aprobado (≥80%)']++;
                             else if (percentage >= 60) scoreDistribution['Regular (60-79%)']++;
                             else scoreDistribution['Reprobado (<60%)']++;
+                        } else {
+                            console.warn(`⚠️ Porcentaje inválido en gráfico: ${percentage}`);
                         }
+                    } else {
+                        console.warn(`⚠️ No se pudo extraer porcentaje en gráfico de: ${score}`);
                     }
                 }
             });
         });
 
-        new Chart(document.getElementById('scores-chart'), {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(scoreDistribution),
-                datasets: [{
-                    data: Object.values(scoreDistribution),
-                    backgroundColor: ['#f8d7da', '#fff3cd', '#d4edda'],
-                    borderColor: ['#721c24', '#856404', '#155724'],
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+        console.log('📊 Distribución de puntuaciones:', scoreDistribution);
+        console.log('📊 Datos de finalización:', completionData);
 
-        new Chart(document.getElementById('completion-chart'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(completionData),
-                datasets: [{
-                    label: 'Nº de Alumnos Completados',
-                    data: Object.values(completionData),
-                    backgroundColor: 'rgba(1, 59, 86, 0.7)',
-                    borderColor: 'rgba(1, 59, 86, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        // Validar que tenemos datos válidos para el gráfico de distribución
+        const validScores = Object.values(scoreDistribution).every(val => !isNaN(val) && isFinite(val) && val >= 0);
+        
+        if (validScores && Object.values(scoreDistribution).some(val => val > 0)) {
+            new Chart(document.getElementById('scores-chart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(scoreDistribution),
+                    datasets: [{
+                        data: Object.values(scoreDistribution),
+                        backgroundColor: ['#f8d7da', '#fff3cd', '#d4edda'],
+                        borderColor: ['#721c24', '#856404', '#155724'],
+                        borderWidth: 1
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            console.warn('⚠️ Datos inválidos para gráfico de distribución de puntuaciones:', scoreDistribution);
+            document.getElementById('scores-chart').innerHTML = '<p style="text-align: center; color: #666;">No hay datos válidos para mostrar</p>';
+        }
+
+        // Validar que tenemos datos válidos para el gráfico de finalización
+        const validCompletion = Object.values(completionData).every(val => !isNaN(val) && isFinite(val) && val >= 0);
+        
+        if (validCompletion && Object.keys(completionData).length > 0) {
+            new Chart(document.getElementById('completion-chart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(completionData),
+                    datasets: [{
+                        label: 'Nº de Alumnos Completados',
+                        data: Object.values(completionData),
+                        backgroundColor: 'rgba(1, 59, 86, 0.7)',
+                        borderColor: 'rgba(1, 59, 86, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            ticks: { stepSize: 1 } 
+                        }
+                    }
+                }
+            });
+        } else {
+            console.warn('⚠️ Datos inválidos para gráfico de finalización:', completionData);
+            document.getElementById('completion-chart').innerHTML = '<p style="text-align: center; color: #666;">No hay datos válidos para mostrar</p>';
+        }
     }
 
     // Muestra la tabla de calificaciones
