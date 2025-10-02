@@ -155,12 +155,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Carga los datos del usuario en la barra lateral y el saludo
     function loadUserData(name, role) {
         const nameParts = name.split(' ');
+        
+        // Para profesores, usar un saludo más apropiado
+        let greeting = '';
+        if (role === 'Profesor') {
+            greeting = '¡Hola, Dra. Antonieta!';
+        } else {
+            greeting = `¡Hola, ${nameParts[0]}!`;
+        }
+        
         const initials = (nameParts[0] ? nameParts[0][0] : '') + (nameParts.length > 1 ? nameParts[1][0] : '');
         
         userAvatar.textContent = initials.toUpperCase();
         userName.textContent = name;
         userRole.textContent = role;
-        welcomeMessage.textContent = `¡Hola, ${nameParts[0]}!`;
+        welcomeMessage.textContent = greeting;
     }
 
     // Configura la navegación (puede ser adaptativa según el rol)
