@@ -5,10 +5,26 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbuJHpy8GujcSwcPwPJ
 window.goToDashboard = function() {
     // Verificar que la sesión esté activa
     const userData = localStorage.getItem('userData');
+    console.log('Navegando al dashboard. Datos de sesión:', userData);
+    
     if (userData) {
-        // Mantener la sesión y ir al dashboard
-        window.location.href = 'index.html';
+        try {
+            const { name, role } = JSON.parse(userData);
+            console.log('Sesión válida encontrada:', name, role);
+            
+            // Asegurar que los datos estén guardados antes de navegar
+            localStorage.setItem('userData', userData);
+            
+            // Mantener la sesión y ir al dashboard
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Error al parsear datos de sesión:', error);
+            // Limpiar datos corruptos y ir al login
+            localStorage.removeItem('userData');
+            window.location.href = 'index.html';
+        }
     } else {
+        console.log('No hay sesión activa, redirigiendo al login');
         // Si no hay sesión, ir al login
         window.location.href = 'index.html';
     }
