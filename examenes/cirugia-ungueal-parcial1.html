@@ -106,7 +106,7 @@
                 <div id="gemini-case-study-container" class="contenedor-caso-estudio">
                     <h3 class="titulo-caso-estudio">✨ Caso de Estudio Personalizado con Fuentes</h3>
                     <div class="botones-caso-estudio">
-                        <button id="gemini-case-study-button" onclick="generateCaseStudy()" class="btn btn-oro">Generar Caso de Estudio para Reforzar</button>
+                        <button id="gemini-case-study-button" onclick="generateCaseStudy()" class="btn btn-oro">Generar Caso de Estudio Personalizado</button>
                     </div>
                     <div id="case-study-content" class="contenido-caso-estudio">
                         <div id="case-study-spinner" class="spinner hidden"></div>
@@ -449,14 +449,33 @@
             answersContainer.classList.add('hidden');
             document.getElementById('case-study-answers-content').classList.add('hidden');
 
+            // Determinar si hay errores o si es 100%
             const incorrectTopics = new Set();
+            const allTopics = new Set();
+            
             examen.userAnswers.forEach((answer, index) => {
-                if (examen.config.questions[index].options[answer] !== examen.config.questions[index].answer) {
-                    incorrectTopics.add(examen.config.questions[index].section);
+                const question = examen.config.questions[index];
+                allTopics.add(question.section);
+                
+                if (question.options[answer] !== question.answer) {
+                    incorrectTopics.add(question.section);
                 }
             });
 
-            const topics = Array.from(incorrectTopics).join(', ');
+            let topics, userPrompt;
+            
+            if (incorrectTopics.size > 0) {
+                // Hay errores: caso personalizado basado en temas fallidos
+                topics = Array.from(incorrectTopics).join(', ');
+                userPrompt = `Temas a reforzar: ${topics}. Por favor, genera el caso de estudio.`;
+            } else {
+                // Es 100%: caso clínico de tema aleatorio
+                const randomTopics = Array.from(allTopics);
+                const randomTopic = randomTopics[Math.floor(Math.random() * randomTopics.length)];
+                topics = randomTopic;
+                userPrompt = `El estudiante obtuvo 100% en el examen. Genera un caso clínico avanzado sobre: ${randomTopic}. Debe ser más desafiante que las preguntas del examen.`;
+            }
+
             const systemPrompt = `Eres un profesor experto en podiatría creando un caso clínico para un estudiante. Basado en los siguientes temas, crea un caso práctico y conciso (150-200 palabras) que presente un escenario de un paciente realista. 
 
 Basate específicamente en estas fuentes académicas de podiatría:
@@ -478,7 +497,6 @@ REVISTAS ACADÉMICAS:
 - Journal of the European Academy of Dermatology and Venereology
 
 Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione sobre diagnóstico diferencial, técnica quirúrgica, o manejo postoperatorio.`;
-            const userPrompt = `Temas a reforzar: ${topics}. Por favor, genera el caso de estudio.`;
 
             const result = await callGroundedGemini(userPrompt, systemPrompt);
             
