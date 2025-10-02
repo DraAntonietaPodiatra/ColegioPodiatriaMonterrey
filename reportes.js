@@ -2,6 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // URL del Web App de Google Apps Script
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbuJHpy8GujcSwcPwPJVQj2MUIYXhamvtw85Co5GBX_MrnEFMY9EZ_Z8aIWXKK6x949A/exec";
 
+    // --- FUNCIÓN PARA IR AL DASHBOARD ---
+    window.goToDashboard = function() {
+        // Verificar que la sesión esté activa
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+            // Mantener la sesión y ir al dashboard
+            window.location.href = 'index.html';
+        } else {
+            // Si no hay sesión, ir al login
+            window.location.href = 'index.html';
+        }
+    };
+
     // --- FUNCIÓN PARA CERRAR SESIÓN ---
     window.logout = function() {
         if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
