@@ -356,16 +356,19 @@
     
     /* Gráficos responsive */
     .chart-container {
-        height: 250px;
+        height: 300px;
         margin: 15px 0;
         width: 100%;
         max-width: 100%;
-        overflow: hidden;
+        overflow: visible;
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .chart-container canvas {
-        max-height: 250px;
+        max-height: 280px;
         max-width: 100%;
         width: 100% !important;
         height: auto !important;
@@ -373,27 +376,30 @@
     
     /* Contenedor específico para gráficos de dona */
     .chart-container.donut-chart {
-        height: 200px;
+        height: 280px;
         display: flex;
         align-items: center;
         justify-content: center;
     }
     
     .chart-container.donut-chart canvas {
-        max-height: 200px;
-        max-width: 200px;
+        max-height: 250px;
+        max-width: 250px;
+        width: 250px !important;
+        height: 250px !important;
     }
     
     /* Contenedor específico para gráficos de barras */
     .chart-container.bar-chart {
-        height: 200px;
+        height: 280px;
         overflow-x: auto;
-        overflow-y: hidden;
+        overflow-y: visible;
     }
     
     .chart-container.bar-chart canvas {
-        max-height: 200px;
+        max-height: 250px;
         min-width: 100%;
+        width: 100% !important;
     }
     
     /* Botones y controles */
@@ -526,30 +532,33 @@
     
     /* Gráficos para móviles pequeños */
     .chart-container {
-        height: 200px;
+        height: 250px;
         margin: 10px 0;
     }
     
     .chart-container canvas {
-        max-height: 200px;
+        max-height: 230px;
         max-width: 100%;
     }
     
     .chart-container.donut-chart {
-        height: 180px;
+        height: 230px;
     }
     
     .chart-container.donut-chart canvas {
-        max-height: 180px;
-        max-width: 180px;
+        max-height: 200px;
+        max-width: 200px;
+        width: 200px !important;
+        height: 200px !important;
     }
     
     .chart-container.bar-chart {
-        height: 180px;
+        height: 230px;
     }
     
     .chart-container.bar-chart canvas {
-        max-height: 180px;
+        max-height: 200px;
+        width: 100% !important;
     }
 }
 
@@ -588,12 +597,15 @@
     /* Forzar que los gráficos no se desborden */
     .chart-container {
         box-sizing: border-box;
-        padding: 10px;
+        padding: 15px;
+        margin: 10px 0;
     }
     
     .chart-container canvas {
         box-sizing: border-box;
         object-fit: contain;
+        display: block;
+        margin: 0 auto;
     }
     
     /* Asegurar que las tablas no se superpongan con gráficos */
