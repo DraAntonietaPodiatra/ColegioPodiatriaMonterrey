@@ -60,6 +60,10 @@
                 </div>
                 
                 <div id="status-message" class="mensaje-estado"></div>
+                <div id="loading-indicator" class="loading-indicator hidden">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Cargando examen...</p>
+                </div>
                 <div id="action-buttons" class="botones-accion"></div>
             </div>
 
@@ -114,7 +118,7 @@
                         <div id="case-study-sources" class="fuentes-caso-estudio"></div>
                     </div>
                     <div id="case-study-answers-container" class="contenedor-respuestas-caso">
-                        <button id="gemini-reveal-answers-button" onclick="revealCaseStudyAnswers()" class="btn btn-oro">✨ Revelar y Explicar Respuestas</button>
+                        <button id="gemini-reveal-answers-button" onclick="revealCaseStudyAnswers()" class="btn btn-oro">✨ Analizar Caso Clínico y Responder Preguntas</button>
                         <div id="case-study-answers-content" class="contenido-respuestas-caso">
                             <div id="case-study-answers-spinner" class="spinner hidden"></div>
                             <p id="case-study-answers-text" class="texto-caso-estudio"></p>
@@ -496,13 +500,17 @@ REVISTAS ACADÉMICAS:
 - International Journal of Dermatology
 - Journal of the European Academy of Dermatology and Venereology
 
-Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione sobre diagnóstico diferencial, técnica quirúrgica, o manejo postoperatorio.`;
+Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione sobre diagnóstico diferencial, técnica quirúrgica, o manejo postoperatorio.
+
+IMPORTANTE: Las preguntas deben empezar con "Pregunta 1:" y "Pregunta 2:" para que sean detectadas correctamente por el sistema.`;
 
             const result = await callGroundedGemini(userPrompt, systemPrompt);
             
             const fullText = result.text;
-            const questionRegex = /(Pregunta[s]? \d+[:.].*|\¿.*?\?)/gi;
+            const questionRegex = /(Pregunta[s]? \d+[:.].*?[?¿]|Preguntas? de [^:]*[:.].*?[?¿]|\d+\.\s*.*?[?¿])/gi;
             const questions = fullText.match(questionRegex);
+            
+            console.log('Preguntas detectadas:', questions);
             
             examen.caseStudyCache = {
                 text: fullText,
@@ -523,10 +531,16 @@ Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione sobre d
 
             spinner.classList.add('hidden');
             
+            // Mostrar siempre el contenedor de respuestas cuando hay un caso de estudio
+            console.log('Mostrando contenedor de respuestas');
+            answersContainer.classList.remove('hidden');
+            document.getElementById('gemini-reveal-answers-button').disabled = false;
+            document.getElementById('case-study-answers-content').classList.add('hidden');
+            
             if (examen.caseStudyCache.questions) {
-                answersContainer.classList.remove('hidden');
-                document.getElementById('gemini-reveal-answers-button').disabled = false;
-                document.getElementById('case-study-answers-content').classList.add('hidden');
+                console.log('Preguntas detectadas:', examen.caseStudyCache.questions);
+            } else {
+                console.log('No se detectaron preguntas específicas, pero mostrando botón de respuestas de todos modos');
             }
         }
 
@@ -542,14 +556,30 @@ Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione sobre d
             textEl.textContent = '';
 
             const systemPrompt = "Eres un profesor experto en podiatría. Responde de forma clara y fundamentada las siguientes preguntas, basándote en el caso clínico proporcionado. Explica el razonamiento clínico detrás de cada respuesta.";
-            const userPrompt = `
-                Basado en el siguiente caso clínico:
-                ---
-                ${examen.caseStudyCache.text}
-                ---
-                Responde y explica las siguientes preguntas:
-                ${examen.caseStudyCache.questions}
-            `;
+            
+            let userPrompt;
+            if (examen.caseStudyCache.questions) {
+                userPrompt = `
+                    Basado en el siguiente caso clínico:
+                    ---
+                    ${examen.caseStudyCache.text}
+                    ---
+                    Responde y explica las siguientes preguntas:
+                    ${examen.caseStudyCache.questions}
+                `;
+            } else {
+                userPrompt = `
+                    Basado en el siguiente caso clínico:
+                    ---
+                    ${examen.caseStudyCache.text}
+                    ---
+                    Analiza este caso clínico y proporciona:
+                    1. Un diagnóstico diferencial detallado
+                    2. Explicación del razonamiento clínico
+                    3. Recomendaciones de tratamiento
+                    4. Consideraciones anatómicas y embriológicas relevantes
+                `;
+            }
             
             const result = await callGroundedGemini(userPrompt, systemPrompt);
             textEl.textContent = result.text;
