@@ -176,8 +176,8 @@ body {
     
     .mobile-logout-btn .btn-text,
     .mobile-reports-btn .btn-text {
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
         white-space: nowrap;
     }
     
