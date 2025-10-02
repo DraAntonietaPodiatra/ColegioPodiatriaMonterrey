@@ -214,5 +214,70 @@ body {
     .main-content { margin-left: 0; padding: 20px; }
     .main-header h1 { font-size: 2rem; }
     .widget { padding: 25px; }
+    
+    /* Estilos específicos para móviles - LOGIN */
+    .login-card {
+        padding: 30px 20px;
+        margin: 10px;
+        border-radius: 12px;
+    }
+    
+    .input-field {
+        font-size: 16px !important; /* Previene zoom en iOS */
+        padding: 14px 16px !important;
+        min-height: 48px !important; /* Tamaño mínimo táctil */
+        border-radius: 8px !important;
+        border: 2px solid var(--border-color) !important;
+        background-color: #ffffff !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    select.input-field {
+        appearance: none !important;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 12px center !important;
+        background-size: 20px !important;
+        padding-right: 40px !important;
+    }
+    
+    .form-group {
+        margin-bottom: 20px !important;
+    }
+    
+    .form-group label {
+        display: block !important;
+        margin-bottom: 8px !important;
+        font-weight: 600 !important;
+        color: var(--text-primary) !important;
+        font-size: 14px !important;
+    }
+    
+    .login-form {
+        background: #f9fafb !important;
+        padding: 20px !important;
+        border-radius: 12px !important;
+        margin: 20px 0 !important;
+    }
+}
+
+/* Estilos adicionales para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .input-field {
+        font-size: 16px !important;
+        padding: 16px !important;
+        min-height: 52px !important;
+    }
+    
+    .login-card {
+        padding: 20px 16px;
+        margin: 5px;
+    }
+    
+    .login-form {
+        margin: 10px 0 !important;
+        padding: 16px !important;
+    }
 }
 
