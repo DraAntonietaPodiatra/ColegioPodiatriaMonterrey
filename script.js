@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeMobileMenu();
     
     // Cargar nombres de alumnos en el select
-    populateStudentNames();
+    populateStudentDropdown();
 
     // Lógica para manejar la sesión del dashboard
     const loginScreen = document.getElementById('login-screen');
