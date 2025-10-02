@@ -272,6 +272,31 @@
         font-size: 0.9rem;
     }
     
+    /* SIDEBAR MÓVIL */
+    .sidebar-header {
+        padding: 20px 15px;
+    }
+    
+    .sidebar-header .logo {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 10px;
+    }
+    
+    .platform-info h3 {
+        font-size: 0.85rem;
+        margin-bottom: 2px;
+    }
+    
+    .platform-subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 2px;
+    }
+    
+    .platform-note {
+        font-size: 0.7rem;
+    }
+    
     /* Tabla de reportes responsive */
     .report-table-container {
         overflow-x: auto;
@@ -389,6 +414,31 @@
     
     .main-header h1 {
         font-size: 1.5rem;
+    }
+    
+    /* SIDEBAR MÓVIL PEQUEÑO */
+    .sidebar-header {
+        padding: 15px 12px;
+    }
+    
+    .sidebar-header .logo {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 8px;
+    }
+    
+    .platform-info h3 {
+        font-size: 0.8rem;
+        margin-bottom: 1px;
+    }
+    
+    .platform-subtitle {
+        font-size: 0.75rem;
+        margin-bottom: 1px;
+    }
+    
+    .platform-note {
+        font-size: 0.65rem;
     }
     
     .report-table {
