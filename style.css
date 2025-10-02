@@ -136,6 +136,11 @@ body {
         z-index: 1000 !important;
     }
     
+    /* Ocultar header móvil en pantalla de login */
+    .login-container .mobile-header {
+        display: none !important;
+    }
+    
     .main-content {
         margin-top: 60px !important; /* Espacio para el header fijo */
     }
@@ -152,13 +157,14 @@ body {
         border-radius: 8px;
         color: white;
         cursor: pointer;
-        padding: 8px;
-        font-size: 1.2rem;
+        padding: 8px 12px;
+        font-size: 0.9rem;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
+        gap: 6px;
+        min-width: 80px;
         height: 40px;
     }
     
@@ -166,6 +172,13 @@ body {
     .mobile-reports-btn:hover {
         background: var(--colegio-gold);
         color: var(--colegio-dark-blue);
+    }
+    
+    .mobile-logout-btn .btn-text,
+    .mobile-reports-btn .btn-text {
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
     }
     
     .mobile-user-info {
