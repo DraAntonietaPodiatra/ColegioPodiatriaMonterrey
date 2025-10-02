@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examen Parcial Cirugía Ungueal - Colegio de Podiatría de Monterrey</title>
     <link rel="stylesheet" href="css/examen-base.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet"></noscript>
     <style>
         /* Estilos específicos para móviles */
         @media (max-width: 768px) {
@@ -47,6 +48,44 @@
                 background: #f9fafb !important;
                 border-radius: 12px !important;
                 margin: 20px 0 !important;
+            }
+            
+            /* Indicador de inicialización */
+            .init-loading {
+                text-align: center;
+                padding: 40px 20px;
+                background: #f8fafc;
+                border-radius: 12px;
+                margin: 20px 0;
+                border: 2px solid #e2e8f0;
+            }
+            
+            .init-loading .loading-spinner {
+                width: 40px;
+                height: 40px;
+                border: 4px solid #e2e8f0;
+                border-top: 4px solid #3b82f6;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 20px;
+            }
+            
+            .init-loading .loading-text {
+                font-size: 18px;
+                font-weight: 600;
+                color: #1e293b;
+                margin-bottom: 8px;
+            }
+            
+            .init-loading .loading-subtext {
+                font-size: 14px;
+                color: #64748b;
+                margin: 0;
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
             }
             
             /* Estilos para fuentes académicas */
@@ -130,7 +169,15 @@
                     <div class="loading-spinner"></div>
                     <p class="loading-text">Cargando examen...</p>
                 </div>
-                <div id="action-buttons" class="botones-accion"></div>
+                
+                <!-- Indicador de inicialización -->
+                <div id="init-loading" class="init-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Inicializando examen, por favor espera...</p>
+                    <p class="loading-subtext">Esto puede tomar unos momentos</p>
+                </div>
+                
+                <div id="action-buttons" class="botones-accion hidden"></div>
             </div>
 
             <!-- Pantalla de Examen -->
@@ -197,12 +244,25 @@
         </div>
     </div>
 
-    <script src="js/examen-base.js"></script>
     <script>
-        // --- CONFIGURACIÓN DEL EXAMEN ---
+        // --- CONFIGURACIÓN RÁPIDA DEL EXAMEN ---
         const examConfig = {
             examId: 'cirugia_ungueal_parcial1',
             examTitle: 'Examen Parcial Cirugía Ungueal',
+            studentData: {
+                // ALUMNOS REALES
+                "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
+                "SOFIA CASTAÑEDA SUAREZ": { matricula: 5849, role: "Alumno" },
+                "JESUS MANUEL VEGA LOPEZ": { matricula: 5850, role: "Alumno" },
+                "EDGAR ALFREDO SANCHEZ LIRA": { matricula: 5858, role: "Alumno" },
+                "RICARDO ALEJANDRO ROMO GONZALEZ": { matricula: 5854, role: "Alumno" },
+                "KEVIN ANTONIO GUTIERREZ PACHECO": { matricula: 5848, role: "Alumno" },
+                "DIANA LAURA BAÑUELOS REYES": { matricula: 5847, role: "Alumno" },
+                "GEORGINA VILLALPANDO LÓPEZ": { matricula: 5856, role: "Alumno" },
+                "JAQUELINE GUADALUPE VERA CABRERA": { matricula: 5851, role: "Alumno" },
+                "MARIA SUSANA HERNANDEZ PAULA": { matricula: 5852, role: "Alumno" },
+                "Dra. Antonieta Alejandra Acosta Grajales": { matricula: "PROF", role: "Profesor", password: "LEONIDAS" }
+            },
             questions: [
                 {
                     section: "Embriología",
@@ -689,6 +749,76 @@ Formato las fuentes como una lista numerada con el formato: "1. Autor(es). Títu
             // Asegurar que el contenedor de respuestas sea visible
             answersContent.style.display = 'block';
         }
+    </script>
+    
+    <!-- Cargar script base después de la configuración -->
+    <script src="js/examen-base.js"></script>
+    
+    <!-- Inicializar examen después de cargar todo -->
+    <script>
+        // Mostrar indicador de inicialización
+        const initLoading = document.getElementById('init-loading');
+        const actionButtons = document.getElementById('action-buttons');
+        
+        // Función para verificar si el examen está listo
+        function checkExamReady() {
+            // Verificar si hay botones de acción visibles
+            if (actionButtons && !actionButtons.classList.contains('hidden')) {
+                // El examen está listo, ocultar indicador
+                if (initLoading) {
+                    initLoading.classList.add('hidden');
+                }
+                return true;
+            }
+            return false;
+        }
+        
+        // Inicializar examen de forma asíncrona para no bloquear
+        setTimeout(() => {
+            if (typeof ExamenPodiatria !== 'undefined') {
+                try {
+                    window.examen = new ExamenPodiatria(examConfig);
+                    
+                    // Verificar periódicamente si el examen está listo
+                    const checkInterval = setInterval(() => {
+                        if (checkExamReady()) {
+                            clearInterval(checkInterval);
+                        }
+                    }, 200);
+                    
+                    // Timeout de seguridad - ocultar indicador después de 10 segundos
+                    setTimeout(() => {
+                        if (initLoading && !initLoading.classList.contains('hidden')) {
+                            initLoading.classList.add('hidden');
+                            if (actionButtons) actionButtons.classList.remove('hidden');
+                        }
+                        clearInterval(checkInterval);
+                    }, 10000);
+                    
+                } catch (error) {
+                    console.error('Error al inicializar examen:', error);
+                    // Mostrar mensaje de error si falla
+                    if (initLoading) {
+                        initLoading.innerHTML = `
+                            <div style="color: #dc2626; text-align: center;">
+                                <p style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Error al cargar el examen</p>
+                                <p style="font-size: 14px; color: #64748b;">Por favor, recarga la página</p>
+                            </div>
+                        `;
+                    }
+                }
+            } else {
+                // Si la clase no está disponible, mostrar mensaje
+                if (initLoading) {
+                    initLoading.innerHTML = `
+                        <div style="color: #dc2626; text-align: center;">
+                            <p style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Error: No se pudo cargar el examen</p>
+                            <p style="font-size: 14px; color: #64748b;">Por favor, recarga la página</p>
+                        </div>
+                    `;
+                }
+            }
+        }, 100);
     </script>
 </body>
 </html>
