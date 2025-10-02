@@ -40,22 +40,6 @@ class ExamenPodiatria {
     // --- BASE DE DATOS DE ALUMNOS Y PROFESORES ---
     get studentData() {
         return {
-            // ALUMNOS DE PRUEBA (para testing - eliminar después)
-            "Prueba 1": { matricula: 1234, role: "Alumno" },
-            "Prueba 2": { matricula: 1235, role: "Alumno" },
-            "Prueba 3": { matricula: 1236, role: "Alumno" },
-            "Prueba 4": { matricula: 1237, role: "Alumno" },
-            "Prueba 5": { matricula: 1238, role: "Alumno" },
-            "Prueba 6": { matricula: 1239, role: "Alumno" },
-            "Prueba 7": { matricula: 1240, role: "Alumno" },
-            "Prueba 8": { matricula: 1241, role: "Alumno" },
-            "Prueba 9": { matricula: 1242, role: "Alumno" },
-            "Prueba 10": { matricula: 1243, role: "Alumno" },
-            "Prueba 11": { matricula: 1244, role: "Alumno" },
-            "Prueba 12": { matricula: 1245, role: "Alumno" },
-            "Prueba 13": { matricula: 1246, role: "Alumno" },
-            "Prueba 14": { matricula: 1247, role: "Alumno" },
-            "Prueba 15": { matricula: 1248, role: "Alumno" },
             
             // ALUMNOS REALES
             "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
