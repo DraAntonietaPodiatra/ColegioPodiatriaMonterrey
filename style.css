@@ -125,65 +125,81 @@ body {
         display: flex !important;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 15px;
-        background: var(--paper);
-        border-bottom: 1px solid var(--border-color);
+        padding: 15px 20px;
+        background: linear-gradient(135deg, var(--colegio-dark-blue), var(--colegio-medium-blue));
+        border-bottom: 2px solid var(--colegio-gold);
         position: sticky;
         top: 0;
         z-index: 100;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
     
     .mobile-center {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 15px;
         flex: 1;
         justify-content: center;
     }
     
     .mobile-logo {
-        height: 35px;
+        height: 45px;
         width: auto;
         flex-shrink: 0;
+        filter: brightness(0) invert(1);
+    }
+    
+    .mobile-platform-info {
+        text-align: left;
     }
     
     .mobile-platform-info h4 {
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--colegio-dark-blue);
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: white;
         margin: 0;
         line-height: 1.2;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     
     .mobile-platform-info p {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
+        font-size: 0.9rem;
+        color: var(--colegio-gold);
         margin: 0;
         line-height: 1.2;
+        font-weight: 600;
     }
     
     .mobile-user-avatar {
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         background: var(--colegio-gold);
         color: var(--colegio-dark-blue);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
-        font-size: 0.9rem;
+        font-weight: 800;
+        font-size: 1rem;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
     .mobile-menu-btn {
-        background: none;
-        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid var(--colegio-gold);
+        border-radius: 8px;
         font-size: 1.5rem;
-        color: var(--colegio-dark-blue);
+        color: white;
         cursor: pointer;
-        padding: 8px;
+        padding: 10px;
         flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-menu-btn:hover {
+        background: var(--colegio-gold);
+        color: var(--colegio-dark-blue);
     }
     
     .mobile-user-info {
@@ -202,6 +218,36 @@ body {
         padding: 15px;
         width: 100%;
         max-width: 100%;
+    }
+    
+    /* HEADER MÓVIL PEQUEÑO */
+    @media (max-width: 480px) {
+        .mobile-header {
+            padding: 12px 15px;
+        }
+        
+        .mobile-logo {
+            height: 40px;
+        }
+        
+        .mobile-platform-info h4 {
+            font-size: 1rem;
+        }
+        
+        .mobile-platform-info p {
+            font-size: 0.8rem;
+        }
+        
+        .mobile-user-avatar {
+            width: 35px;
+            height: 35px;
+            font-size: 0.9rem;
+        }
+        
+        .mobile-menu-btn {
+            padding: 8px;
+            font-size: 1.3rem;
+        }
     }
 }
 
