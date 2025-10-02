@@ -212,10 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Para profesores, usar un saludo más apropiado
         let greeting = '';
+        let welcomeText = '';
+        
         if (role === 'Profesor') {
             greeting = '¡Hola, Dra. Antonieta!';
+            welcomeText = 'Este es tu panel de control docente. Gestiona exámenes y revisa resultados.';
         } else {
             greeting = `¡Hola, ${nameParts[0]}!`;
+            welcomeText = 'Este es tu panel de control. ¡Mucha suerte en tu examen!';
         }
         
         const initials = (nameParts[0] ? nameParts[0][0] : '') + (nameParts.length > 1 ? nameParts[1][0] : '');
@@ -224,6 +228,12 @@ document.addEventListener('DOMContentLoaded', () => {
         userName.textContent = name;
         userRole.textContent = role;
         welcomeMessage.textContent = greeting;
+        
+        // Actualizar texto de bienvenida según el rol
+        const welcomeTextElement = document.querySelector('.main-header p');
+        if (welcomeTextElement) {
+            welcomeTextElement.textContent = welcomeText;
+        }
         
         // Actualizar avatar móvil
         const mobileAvatar = document.getElementById('mobile-user-avatar');
