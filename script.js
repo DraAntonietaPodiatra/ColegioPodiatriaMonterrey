@@ -1,400 +1,285 @@
-// URL del Web App de Google Apps Script
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbuJHpy8GujcSwcPwPJVQj2MUIYXhamvtw85Co5GBX_MrnEFMY9EZ_Z8aIWXKK6x949A/exec";
-
-// --- FUNCIÓN PARA IR AL DASHBOARD ---
-window.goToDashboard = function() {
-    // Verificar que la sesión esté activa
-    const userData = localStorage.getItem('userData');
-    console.log('Navegando al dashboard. Datos de sesión:', userData);
-    
-    if (userData) {
-        try {
-            const { name, role } = JSON.parse(userData);
-            console.log('Sesión válida encontrada:', name, role);
-            
-            // Asegurar que los datos estén guardados antes de navegar
-            localStorage.setItem('userData', userData);
-            
-            // Mantener la sesión y ir al dashboard
-            window.location.href = 'index.html';
-        } catch (error) {
-            console.error('Error al parsear datos de sesión:', error);
-            // Limpiar datos corruptos y ir al login
-            localStorage.removeItem('userData');
-            window.location.href = 'index.html';
-        }
-    } else {
-        console.log('No hay sesión activa, redirigiendo al login');
-        // Si no hay sesión, ir al login
-        window.location.href = 'index.html';
-    }
-};
-
-// --- FUNCIÓN PARA CERRAR SESIÓN ---
-window.logout = function() {
-    if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-        // Limpiar datos de sesión
-        localStorage.removeItem('userData');
-        sessionStorage.clear();
-        
-        // Redirigir al login
-        window.location.href = 'index.html';
-    }
-};
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    const loadingSpinner = document.getElementById('loading-spinner');
-    const reportContent = document.getElementById('report-content');
+    // --- BASE DE DATOS DE ALUMNOS Y MATRÍCULAS ---
+    const studentData = {
+        // ALUMNOS DE PRUEBA (para testing - eliminar después)
+        "Prueba 1": { matricula: 1234, role: "Alumno" },
+        "Prueba 2": { matricula: 1235, role: "Alumno" },
+        "Prueba 3": { matricula: 1236, role: "Alumno" },
+        "Prueba 4": { matricula: 1237, role: "Alumno" },
+        "Prueba 5": { matricula: 1238, role: "Alumno" },
+        "Prueba 6": { matricula: 1239, role: "Alumno" },
+        "Prueba 7": { matricula: 1240, role: "Alumno" },
+        "Prueba 8": { matricula: 1241, role: "Alumno" },
+        "Prueba 9": { matricula: 1242, role: "Alumno" },
+        "Prueba 10": { matricula: 1243, role: "Alumno" },
+        "Prueba 11": { matricula: 1244, role: "Alumno" },
+        "Prueba 12": { matricula: 1245, role: "Alumno" },
+        "Prueba 13": { matricula: 1246, role: "Alumno" },
+        "Prueba 14": { matricula: 1247, role: "Alumno" },
+        "Prueba 15": { matricula: 1248, role: "Alumno" },
+        
+        // ALUMNOS REALES
+        "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
+        "SOFIA CASTAÑEDA SUAREZ": { matricula: 5849, role: "Alumno" },
+        "JESUS MANUEL VEGA LOPEZ": { matricula: 5850, role: "Alumno" },
+        "EDGAR ALFREDO SANCHEZ LIRA": { matricula: 5858, role: "Alumno" },
+        "RICARDO ALEJANDRO ROMO GONZALEZ": { matricula: 5854, role: "Alumno" },
+        "KEVIN ANTONIO GUTIERREZ PACHECO": { matricula: 5848, role: "Alumno" },
+        "DIANA LAURA BAÑUELOS REYES": { matricula: 5847, role: "Alumno" },
+        "GEORGINA VILLALPANDO LÓPEZ": { matricula: 5856, role: "Alumno" },
+        "JAQUELINE GUADALUPE VERA CABRERA": { matricula: 5851, role: "Alumno" },
+        "MARIA SUSANA HERNANDEZ PAULA": { matricula: 5852, role: "Alumno" },
+        
+        // Profesora con contraseña LEONIDAS
+        "Dra. Antonieta Alejandra Acosta Grajales": { matricula: "PROF", role: "Profesor", password: "LEONIDAS" }
+    };
 
-    // Función principal para obtener y mostrar los datos
-    async function fetchAndDisplayReports() {
-        try {
-            console.log('🔍 Intentando cargar datos de reportes...');
-            console.log('📡 URL:', `${SCRIPT_URL}?action=getReportData`);
-            
-            const response = await fetch(`${SCRIPT_URL}?action=getReportData`);
-            console.log('📨 Respuesta recibida:', response.status, response.statusText);
-            
-            if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+    // --- REFERENCIAS AL DOM ---
+    const loginScreen = document.getElementById('login-screen');
+    const appLayout = document.querySelector('.app-layout');
+    const studentNameSelect = document.getElementById('studentName');
+    const studentMatriculaInput = document.getElementById('studentMatricula');
+    const studentPasswordInput = document.getElementById('studentPassword');
+    const loginButton = document.getElementById('login-button');
+    
+    const userAvatar = document.getElementById('user-avatar');
+    const userName = document.getElementById('user-name');
+    const userRole = document.getElementById('user-role');
+    const welcomeMessage = document.getElementById('welcome-message');
+
+    // --- INICIALIZACIÓN ---
+    function init() {
+        // Verificar si ya hay una sesión activa
+        checkExistingSession();
+        populateStudentDropdown();
+        setupLoginListeners();
+        lucide.createIcons(); // Inicializa los iconos
+    }
+
+    // Verificar sesión existente
+    function checkExistingSession() {
+        const userData = localStorage.getItem('userData');
+        console.log('Verificando sesión existente:', userData);
+        
+        if (userData) {
+            try {
+                const { name, role } = JSON.parse(userData);
+                console.log('Sesión válida encontrada al cargar página:', name, role);
+                // Mostrar el dashboard directamente
+                showDashboard(name, role);
+            } catch (error) {
+                console.error('Error al cargar sesión existente:', error);
+                localStorage.removeItem('userData');
             }
-            
-            const result = await response.json();
-            console.log('📊 Datos recibidos:', result);
-
-            if (result.success) {
-                const data = result.data;
-                console.log('✅ Datos procesados:', data);
-                
-                if (!data || data.length === 0) {
-                    loadingSpinner.innerHTML = `
-                        <div style="text-align: center; padding: 40px;">
-                            <p style="color: #666; font-size: 1.2rem;">No hay datos de exámenes disponibles</p>
-                            <p style="color: #999;">Realiza algunos exámenes para ver las estadísticas aquí.</p>
-                            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--colegio-medium-blue); color: white; border: none; border-radius: 5px; cursor: pointer;">Actualizar</button>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                displayStats(data);
-                displayCharts(data);
-                displayTable(data);
-                
-                loadingSpinner.classList.add('hidden');
-                reportContent.classList.remove('hidden');
-            } else {
-                throw new Error(result.error || 'La respuesta del servidor no fue exitosa.');
-            }
-
-        } catch (error) {
-            console.error('Error al cargar el reporte:', error);
-            loadingSpinner.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <p style="color: red;"><strong>Error al cargar el reporte:</strong> ${error.message}</p>
-                    <p style="color: #666;">Por favor, verifica que:</p>
-                    <ul style="text-align: left; color: #666; max-width: 400px; margin: 0 auto;">
-                        <li>La URL del Apps Script es correcta</li>
-                        <li>El script está implementado como aplicación web</li>
-                        <li>La hoja de cálculo se llama "Examenes podiatria"</li>
-                        <li>El acceso está configurado como "Cualquier usuario"</li>
-                    </ul>
-                    <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--colegio-medium-blue); color: white; border: none; border-radius: 5px; cursor: pointer;">Reintentar</button>
-                </div>
-            `;
+        } else {
+            console.log('No hay sesión existente, mostrando pantalla de login');
         }
+    }
+
+    // --- FUNCIONES DE AUTENTICACIÓN Y UI ---
+
+    // Llena la lista desplegable de nombres
+    function populateStudentDropdown() {
+        const studentNames = Object.keys(studentData);
+        studentNames.forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            studentNameSelect.appendChild(option);
+        });
     }
     
-    // Muestra las estadísticas principales
-    function displayStats(data) {
-        if (!data || data.length === 0) return;
-
-        console.log('📊 Datos para estadísticas:', data);
-
-        const totalStudents = data.length;
-        const examColumns = Object.keys(data[0] || {}).filter(key => 
-            !['Timestamp', 'Nombre_Alumno', 'Matricula', ''].includes(key) && 
-            key && key.trim() !== ''
-        );
-        
-        // Contar exámenes completados (que tienen al menos una calificación)
-        let completedExams = 0;
-        examColumns.forEach(exam => {
-            const hasCompletions = data.some(student => {
-                const score = student[exam];
-                return score && String(score).trim() !== '' && !String(score).includes('-');
-            });
-            if (hasCompletions) completedExams++;
-        });
-        
-        // Contar total de calificaciones individuales
-        let totalGrades = 0;
-        data.forEach(student => {
-            examColumns.forEach(exam => {
-                const score = student[exam];
-                if (score && String(score).trim() !== '' && !String(score).includes('-')) {
-                    totalGrades++;
-                }
-            });
-        });
-        
-        const totalExams = completedExams;
-        const totalIndividualGrades = totalGrades;
-
-        console.log('📝 Columnas de exámenes encontradas:', examColumns);
-        console.log('📊 Exámenes completados:', completedExams);
-        console.log('📊 Total de calificaciones:', totalIndividualGrades);
-
-        let totalScores = 0;
-        let passedScores = 0;
-        
-        data.forEach(student => {
-            examColumns.forEach(exam => {
-                const score = student[exam];
-                if (score && String(score).trim() !== '') {
-                    console.log(`🎯 Procesando puntuación para ${student.Nombre_Alumno || 'Alumno'} en ${exam}:`, score);
-                    
-                    const percentageMatch = String(score).match(/\((\d+\.?\d*)%\)/);
-                    if (percentageMatch) {
-                        const percentage = parseFloat(percentageMatch[1]);
-                        console.log(`📈 Porcentaje extraído: ${percentage}`);
-                        
-                        if (!isNaN(percentage) && isFinite(percentage) && percentage >= 0 && percentage <= 100) {
-                            totalScores++;
-                            if (percentage >= 70) passedScores++;
-                        } else {
-                            console.warn(`⚠️ Porcentaje inválido detectado: ${percentage}`);
-                        }
-                    } else {
-                        console.warn(`⚠️ No se pudo extraer porcentaje de: ${score}`);
-                    }
-                }
-            });
-        });
-
-        console.log(`📊 Total scores: ${totalScores}, Passed scores: ${passedScores}`);
-
-        const averagePassRate = totalScores > 0 ? 
-            Math.min(100, Math.max(0, ((passedScores / totalScores) * 100))).toFixed(1) : 0;
-        
-        console.log(`📈 Tasa de aprobación calculada: ${averagePassRate}%`);
-        
-        document.getElementById('total-students').textContent = completedExams;
-        document.getElementById('total-exams').textContent = totalIndividualGrades;
-        document.getElementById('average-pass-rate').textContent = `${averagePassRate}%`;
+    // Configura los listeners para el formulario de login
+    function setupLoginListeners() {
+        studentNameSelect.addEventListener('change', handleStudentSelection);
+        studentMatriculaInput.addEventListener('input', validateForm);
+        if (studentPasswordInput) {
+            studentPasswordInput.addEventListener('input', validateForm);
+        }
+        loginButton.addEventListener('click', handleLogin);
     }
     
-    // Muestra los gráficos
-    function displayCharts(data) {
-        if (!data || data.length === 0) return;
-
-        console.log('📊 Datos para gráficos:', data);
-
-        const examColumns = Object.keys(data[0] || {}).filter(key => 
-            !['Timestamp', 'Nombre_Alumno', 'Matricula', ''].includes(key) && 
-            key && key.trim() !== ''
-        );
-
-        console.log('📝 Columnas para gráficos:', examColumns);
-
-        const scoreDistribution = { 'Reprobado (<70%)': 0, 'Aprobado (70-89%)': 0, 'Excelente (≥90%)': 0 };
-        const completionData = {};
-        examColumns.forEach(exam => completionData[exam] = 0);
-
-        data.forEach(student => {
-            examColumns.forEach(exam => {
-                const score = student[exam];
-                if (score && String(score).trim() !== '') {
-                    completionData[exam]++;
-                    const percentageMatch = String(score).match(/\((\d+\.?\d*)%\)/);
-                    if (percentageMatch) {
-                        const percentage = parseFloat(percentageMatch[1]);
-                        console.log(`📈 Porcentaje en gráfico: ${percentage} para ${student.Nombre_Alumno || 'Alumno'} en ${exam}`);
-                        
-                        if (!isNaN(percentage) && isFinite(percentage) && percentage >= 0 && percentage <= 100) {
-                            if (percentage >= 90) scoreDistribution['Excelente (≥90%)']++;
-                            else if (percentage >= 70) scoreDistribution['Aprobado (70-89%)']++;
-                            else scoreDistribution['Reprobado (<70%)']++;
-                        } else {
-                            console.warn(`⚠️ Porcentaje inválido en gráfico: ${percentage}`);
-                        }
-                    } else {
-                        console.warn(`⚠️ No se pudo extraer porcentaje en gráfico de: ${score}`);
-                    }
-                }
-            });
-        });
-
-        console.log('📊 Distribución de puntuaciones:', scoreDistribution);
-        console.log('📊 Datos de finalización:', completionData);
-
-        // Validar y limpiar datos para el gráfico de distribución
-        const cleanedScoreData = {};
-        let hasValidData = false;
+    // Maneja la selección del estudiante
+    function handleStudentSelection() {
+        const name = studentNameSelect.value;
+        if (!name) return;
         
-        Object.keys(scoreDistribution).forEach(key => {
-            const value = scoreDistribution[key];
-            console.log(`🔍 Validando ${key}: ${value}`);
-            
-            if (!isNaN(value) && isFinite(value) && value >= 0 && Number.isInteger(value)) {
-                cleanedScoreData[key] = value;
-                if (value > 0) hasValidData = true;
-            } else {
-                console.warn(`⚠️ Valor inválido para ${key}: ${value}`);
-                cleanedScoreData[key] = 0;
-            }
-        });
+        const userData = studentData[name];
+        const matriculaContainer = document.getElementById('student-matricula-container');
+        const passwordContainer = document.getElementById('student-password-container');
         
-        console.log('📊 Datos limpios para gráfico:', cleanedScoreData);
-        console.log('📊 ¿Tiene datos válidos?', hasValidData);
-        
-        if (hasValidData && Object.keys(cleanedScoreData).length > 0) {
-            // Verificar que Chart.js esté disponible
-            if (typeof Chart === 'undefined') {
-                console.error('❌ Chart.js no está cargado');
-                document.getElementById('scores-chart').innerHTML = '<p style="text-align: center; color: red; padding: 20px;">Error: Chart.js no está disponible</p>';
-                return;
-            }
-            
-            // Destruir gráfico anterior si existe
-            const existingChart = Chart.getChart('scores-chart');
-            if (existingChart) {
-                console.log('🗑️ Destruyendo gráfico anterior');
-                existingChart.destroy();
-            }
-            
-            console.log('🎨 Creando nuevo gráfico de distribución');
-            
-            // Asegurar que el contenedor tenga dimensiones fijas
-            const chartContainer = document.getElementById('scores-chart');
-            chartContainer.style.width = '100%';
-            chartContainer.style.height = '300px';
-            chartContainer.style.position = 'relative';
-            
-            new Chart(chartContainer, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(cleanedScoreData),
-                    datasets: [{
-                        data: Object.values(cleanedScoreData),
-                        backgroundColor: ['#f8d7da', '#d4edda', '#cff4fc'],
-                        borderColor: ['#721c24', '#155724', '#0f5132'],
-                        borderWidth: 1
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    aspectRatio: 1,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        }
-                    },
-                    animation: {
-                        animateRotate: true,
-                        animateScale: true,
-                        duration: 1000
-                    },
-                    cutout: '50%'
-                }
-            });
+        if (userData.role === 'Profesor') {
+            // Mostrar campo de contraseña para profesores
+            if (matriculaContainer) matriculaContainer.classList.add('hidden');
+            if (passwordContainer) passwordContainer.classList.remove('hidden');
         } else {
-            console.warn('⚠️ No hay datos válidos para gráfico de distribución');
-            document.getElementById('scores-chart').innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No hay datos válidos para mostrar</p>';
+            // Mostrar campo de matrícula para estudiantes
+            if (matriculaContainer) matriculaContainer.classList.remove('hidden');
+            if (passwordContainer) passwordContainer.classList.add('hidden');
         }
-
-        // Validar que tenemos datos válidos para el gráfico de finalización
-        const validCompletion = Object.values(completionData).every(val => !isNaN(val) && isFinite(val) && val >= 0);
         
-        if (validCompletion && Object.keys(completionData).length > 0) {
-            new Chart(document.getElementById('completion-chart'), {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(completionData),
-                    datasets: [{
-                        label: 'Nº de Alumnos Completados',
-                        data: Object.values(completionData),
-                        backgroundColor: 'rgba(1, 59, 86, 0.7)',
-                        borderColor: 'rgba(1, 59, 86, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { 
-                            beginAtZero: true, 
-                            ticks: { stepSize: 1 } 
-                        }
-                    }
-                }
-            });
-        } else {
-            console.warn('⚠️ Datos inválidos para gráfico de finalización:', completionData);
-            document.getElementById('completion-chart').innerHTML = '<p style="text-align: center; color: #666;">No hay datos válidos para mostrar</p>';
-        }
+        validateForm();
     }
 
-    // Muestra la tabla de calificaciones
-    function displayTable(data) {
-        const tableHead = document.querySelector('#grades-table thead');
-        const tableBody = document.querySelector('#grades-table tbody');
+    // Valida el formulario para habilitar/deshabilitar el botón de acceso
+    function validateForm() {
+        const name = studentNameSelect.value;
+        const userData = studentData[name];
         
-        if (!data || data.length === 0) {
-            tableHead.innerHTML = '<tr><th>Información</th></tr>';
-            tableBody.innerHTML = '<tr><td>No hay datos de alumnos para mostrar.</td></tr>';
+        if (!name || !userData) {
+            loginButton.disabled = true;
             return;
         }
         
-        const headers = Object.keys(data[0]).filter(h => h).map(h => {
-            if (h === 'Timestamp') return 'Fecha y Hora';
-            if (h === 'Nombre_Alumno') return 'Nombre Alumno';
-            return h;
-        });
-        tableHead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+        let isValid = false;
+        if (userData.role === 'Profesor') {
+            const password = studentPasswordInput ? studentPasswordInput.value : '';
+            isValid = password === userData.password;
+        } else {
+            const matricula = studentMatriculaInput.value;
+            isValid = matricula && parseInt(matricula, 10) === userData.matricula;
+        }
         
-        tableBody.innerHTML = data.map(student => {
-            const cells = headers.map(header => {
-                // Mapear el header de vuelta al nombre original para acceder a los datos
-                let originalHeader = header;
-                if (header === 'Fecha y Hora') originalHeader = 'Timestamp';
-                if (header === 'Nombre Alumno') originalHeader = 'Nombre_Alumno';
-                
-                const value = student[originalHeader] || '-';
-                
-                if (originalHeader === 'Timestamp') {
-                    return `<td>${new Date(value).toLocaleString()}</td>`;
-                }
-
-                if (!['Nombre_Alumno', 'Matricula'].includes(originalHeader)) {
-                    let scoreClass = 'not-taken';
-                    if (String(value).includes('%')) {
-                        const percentageMatch = String(value).match(/\((\d+\.?\d*)%\)/);
-                        if (percentageMatch) {
-                            const percentage = parseFloat(percentageMatch[1]);
-                            if (percentage >= 90) scoreClass = 'excellent';
-                            else if (percentage >= 70) scoreClass = 'passed';
-                            else scoreClass = 'failed';
-                        }
-                    }
-                    return `<td><span class="score-cell ${scoreClass}">${value}</span></td>`;
-                }
-                
-                return `<td>${value}</td>`;
-
-            }).join('');
-            return `<tr>${cells}</tr>`;
-        }).join('');
+        loginButton.disabled = !isValid;
     }
 
-    lucide.createIcons();
-    fetchAndDisplayReports();
+    // Maneja el intento de login
+    function handleLogin() {
+        const name = studentNameSelect.value;
+        const userData = studentData[name];
+        
+        if (!userData) {
+            alert("Usuario no encontrado. Por favor, verifica tus datos.");
+            return;
+        }
+        
+        let isValid = false;
+        if (userData.role === 'Profesor') {
+            const password = studentPasswordInput ? studentPasswordInput.value : '';
+            isValid = password === userData.password;
+        } else {
+            const matricula = parseInt(studentMatriculaInput.value, 10);
+            isValid = matricula === userData.matricula;
+        }
+        
+        if (isValid) {
+            // Autenticación exitosa
+            launchApp(name, userData.role);
+        } else {
+            // Falla de autenticación
+            const message = userData.role === 'Profesor' ? 
+                'Contraseña incorrecta. Por favor, verifica tus datos.' : 
+                'Matrícula incorrecta. Por favor, verifica tus datos.';
+            alert(message);
+        }
+    }
+
+    // Lanza la aplicación principal después del login
+    function launchApp(name, role) {
+        // Ocultar pantalla de login y mostrar la app
+        loginScreen.classList.add('hidden');
+        appLayout.classList.remove('hidden');
+
+        // Cargar datos del usuario en la UI
+        loadUserData(name, role);
+        setupNavigation(role);
+    }
+
+    // Carga los datos del usuario en la barra lateral y el saludo
+    function loadUserData(name, role) {
+        const nameParts = name.split(' ');
+        
+        // Para profesores, usar un saludo más apropiado
+        let greeting = '';
+        if (role === 'Profesor') {
+            greeting = '¡Hola, Dra. Antonieta!';
+        } else {
+            greeting = `¡Hola, ${nameParts[0]}!`;
+        }
+        
+        const initials = (nameParts[0] ? nameParts[0][0] : '') + (nameParts.length > 1 ? nameParts[1][0] : '');
+        
+        userAvatar.textContent = initials.toUpperCase();
+        userName.textContent = name;
+        userRole.textContent = role;
+        welcomeMessage.textContent = greeting;
+    }
+
+    // Configura la navegación (puede ser adaptativa según el rol)
+    function setupNavigation(role) {
+        // Si el usuario es Profesor, muestra el panel de admin
+        if (role === 'Profesor') {
+            document.querySelector('.teacher-only').classList.remove('hidden');
+        }
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const views = document.querySelectorAll('.view');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // Solo prevenir el comportamiento por defecto para enlaces internos (#)
+                if (link.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    // Lógica de navegación interna
+                    // ...
+                }
+                // Para enlaces externos (como reportes.html), permitir navegación normal
+            });
+        });
+    }
+
+    // --- FUNCIÓN PARA CERRAR SESIÓN ---
+    window.logout = function() {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            // Limpiar datos de sesión
+            localStorage.removeItem('userData');
+            sessionStorage.clear();
+            
+            // Recargar la página para volver al login
+            location.reload();
+        }
+    };
+
+    // --- FUNCIÓN PARA LIMPIAR DATOS DE PRUEBA (solo para profesores) ---
+    window.clearAllTestData = function() {
+        if (confirm('¿Estás segura de que quieres limpiar todos los datos de prueba?\n\nEsto eliminará:\n- Progreso de exámenes de alumnos de prueba\n- Datos de localStorage de testing\n\n⚠️ Esta acción no se puede deshacer.')) {
+            // Limpiar localStorage de todos los alumnos de prueba
+            const testStudents = ['Prueba 1', 'Prueba 2', 'Prueba 3', 'Prueba 4', 'Prueba 5', 'Prueba 6', 'Prueba 7', 'Prueba 8', 'Prueba 9', 'Prueba 10'];
+            const testMatriculas = ['1234', '1235', '1236', '1237', '1238', '1239', '1240', '1241', '1242', '1243'];
+            
+            let cleanedCount = 0;
+            
+            testMatriculas.forEach(matricula => {
+                // Limpiar datos de localStorage para cada matrícula de prueba
+                const examId = 'cirugia_ungueal_parcial1';
+                const completedKey = `exam_completed_${examId}_${matricula}`;
+                const stateKey = `exam_state_${examId}_${matricula}`;
+                const reviewKey = `exam_review_${examId}_${matricula}`;
+                
+                if (localStorage.getItem(completedKey)) {
+                    localStorage.removeItem(completedKey);
+                    cleanedCount++;
+                }
+                if (localStorage.getItem(stateKey)) {
+                    localStorage.removeItem(stateKey);
+                    cleanedCount++;
+                }
+                if (localStorage.getItem(reviewKey)) {
+                    localStorage.removeItem(reviewKey);
+                    cleanedCount++;
+                }
+            });
+            
+            alert(`✅ Datos de prueba limpiados exitosamente.\n\nSe eliminaron ${cleanedCount} entradas de localStorage.\n\nLos alumnos de prueba ahora pueden volver a hacer los exámenes.`);
+            
+            // Recargar la página para reflejar los cambios
+            location.reload();
+        }
+    };
+
+    // --- EJECUTAR INICIALIZACIÓN ---
+    init();
+
 });
 
