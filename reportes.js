@@ -87,9 +87,33 @@ document.addEventListener('DOMContentLoaded', () => {
             !['Timestamp', 'Nombre_Alumno', 'Matricula', ''].includes(key) && 
             key && key.trim() !== ''
         );
-        const totalExams = examColumns.length;
+        
+        // Contar exámenes completados (que tienen al menos una calificación)
+        let completedExams = 0;
+        examColumns.forEach(exam => {
+            const hasCompletions = data.some(student => {
+                const score = student[exam];
+                return score && String(score).trim() !== '' && !String(score).includes('-');
+            });
+            if (hasCompletions) completedExams++;
+        });
+        
+        // Contar estudiantes únicos (que han completado al menos un examen)
+        let uniqueStudents = 0;
+        data.forEach(student => {
+            const hasCompletedAny = examColumns.some(exam => {
+                const score = student[exam];
+                return score && String(score).trim() !== '' && !String(score).includes('-');
+            });
+            if (hasCompletedAny) uniqueStudents++;
+        });
+        
+        const totalExams = completedExams;
+        const totalUniqueStudents = uniqueStudents;
 
         console.log('📝 Columnas de exámenes encontradas:', examColumns);
+        console.log('📊 Exámenes completados:', completedExams);
+        console.log('👥 Estudiantes únicos:', totalUniqueStudents);
 
         let totalScores = 0;
         let passedScores = 0;
@@ -107,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         if (!isNaN(percentage) && isFinite(percentage) && percentage >= 0 && percentage <= 100) {
                             totalScores++;
-                            if (percentage >= 80) passedScores++;
+                            if (percentage >= 70) passedScores++;
                         } else {
                             console.warn(`⚠️ Porcentaje inválido detectado: ${percentage}`);
                         }
@@ -125,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log(`📈 Tasa de aprobación calculada: ${averagePassRate}%`);
         
-        document.getElementById('total-students').textContent = totalStudents;
-        document.getElementById('total-exams').textContent = totalExams;
+        document.getElementById('total-students').textContent = completedExams;
+        document.getElementById('total-exams').textContent = totalUniqueStudents;
         document.getElementById('average-pass-rate').textContent = `${averagePassRate}%`;
     }
     
@@ -143,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('📝 Columnas para gráficos:', examColumns);
 
-        const scoreDistribution = { 'Reprobado (<60%)': 0, 'Regular (60-79%)': 0, 'Aprobado (≥80%)': 0 };
+        const scoreDistribution = { 'Reprobado (<70%)': 0, 'Aprobado (70-89%)': 0, 'Excelente (≥90%)': 0 };
         const completionData = {};
         examColumns.forEach(exam => completionData[exam] = 0);
 
@@ -158,9 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log(`📈 Porcentaje en gráfico: ${percentage} para ${student.Nombre_Alumno || 'Alumno'} en ${exam}`);
                         
                         if (!isNaN(percentage) && isFinite(percentage) && percentage >= 0 && percentage <= 100) {
-                            if (percentage >= 80) scoreDistribution['Aprobado (≥80%)']++;
-                            else if (percentage >= 60) scoreDistribution['Regular (60-79%)']++;
-                            else scoreDistribution['Reprobado (<60%)']++;
+                            if (percentage >= 90) scoreDistribution['Excelente (≥90%)']++;
+                            else if (percentage >= 70) scoreDistribution['Aprobado (70-89%)']++;
+                            else scoreDistribution['Reprobado (<70%)']++;
                         } else {
                             console.warn(`⚠️ Porcentaje inválido en gráfico: ${percentage}`);
                         }
@@ -223,8 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     labels: Object.keys(cleanedScoreData),
                     datasets: [{
                         data: Object.values(cleanedScoreData),
-                        backgroundColor: ['#f8d7da', '#fff3cd', '#d4edda'],
-                        borderColor: ['#721c24', '#856404', '#155724'],
+                        backgroundColor: ['#f8d7da', '#d4edda', '#cff4fc'],
+                        borderColor: ['#721c24', '#155724', '#0f5132'],
                         borderWidth: 1
                     }]
                 },
@@ -298,7 +322,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        const headers = Object.keys(data[0]).filter(h => h);
+        const headers = Object.keys(data[0]).filter(h => h).map(h => {
+            if (h === 'Timestamp') return 'Fecha y Hora';
+            if (h === 'Nombre_Alumno') return 'Nombre Alumno';
+            return h;
+        });
         tableHead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
         
         tableBody.innerHTML = data.map(student => {
@@ -315,8 +343,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         const percentageMatch = String(value).match(/\((\d+\.?\d*)%\)/);
                         if (percentageMatch) {
                             const percentage = parseFloat(percentageMatch[1]);
-                            if (percentage >= 80) scoreClass = 'passed';
-                            else if (percentage >= 60) scoreClass = 'borderline';
+                            if (percentage >= 90) scoreClass = 'excellent';
+                            else if (percentage >= 70) scoreClass = 'passed';
                             else scoreClass = 'failed';
                         }
                     }
