@@ -187,7 +187,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Muestra los gráficos
     function displayCharts(data) {
-        if (!data || data.length === 0) return;
+        if (!data || data.length === 0) {
+            // Si no hay datos reales, mostrar gráficos de placeholder
+            const placeholderCharts = `
+                <div style="text-align: center; padding: 20px;">
+                    <p style="color: #666;">No hay datos de exámenes completados para mostrar gráficos.</p>
+                    <p style="color: #999;">Por favor, asegúrate de que los alumnos hayan completado al menos un examen.</p>
+                </div>
+            `;
+            document.getElementById('scores-chart').innerHTML = placeholderCharts;
+            document.getElementById('completion-chart').innerHTML = placeholderCharts;
+            return;
+        }
 
         console.log('📊 Datos para gráficos:', data);
 
