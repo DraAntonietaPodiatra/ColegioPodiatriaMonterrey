@@ -1,15 +1,47 @@
+// --- BASE DE DATOS DE ALUMNOS Y MATRÍCULAS ---
+const studentData = {
+    
+    // ALUMNOS REALES
+    "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
+    "SOFIA CASTAÑEDA SUAREZ": { matricula: 5849, role: "Alumno" },
+    "JESUS MANUEL VEGA LOPEZ": { matricula: 5850, role: "Alumno" },
+    "EDGAR ALFREDO SANCHEZ LIRA": { matricula: 5858, role: "Alumno" },
+    "RICARDO ALEJANDRO ROMO GONZALEZ": { matricula: 5854, role: "Alumno" },
+    "KEVIN ANTONIO GUTIERREZ PACHECO": { matricula: 5848, role: "Alumno" },
+    "DIANA LAURA BAÑUELOS REYES": { matricula: 5847, role: "Alumno" },
+    "GEORGINA VILLALPANDO LÓPEZ": { matricula: 5856, role: "Alumno" },
+    "JAQUELINE GUADALUPE VERA CABRERA": { matricula: 5851, role: "Alumno" },
+    "MARIA SUSANA HERNANDEZ PAULA": { matricula: 5852, role: "Alumno" },
+    
+    // Profesora con contraseña LEONIDAS
+    "Dra. Antonieta Alejandra Acosta Grajales": { matricula: "PROF", role: "Profesor", password: "LEONIDAS" }
+};
+
+// --- REFERENCIAS AL DOM ---
+let studentNameSelect, studentMatriculaInput, studentPasswordInput, loginButton;
+let userAvatar, userName, userRole, welcomeMessage;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar iconos
-    lucide.createIcons();
+    // Obtener referencias del DOM
+    studentNameSelect = document.getElementById('studentName');
+    studentMatriculaInput = document.getElementById('studentMatricula');
+    studentPasswordInput = document.getElementById('studentPassword');
+    loginButton = document.getElementById('login-button');
     
-    // Inicializar menú móvil
-    initializeMobileMenu();
-    
-    // Cargar nombres de alumnos en el select
-    populateStudentDropdown();
+    userAvatar = document.getElementById('user-avatar');
+    userName = document.getElementById('user-name');
+    userRole = document.getElementById('user-role');
+    welcomeMessage = document.getElementById('welcome-message');
     
     // Configurar listeners
     setupLoginListeners();
+    
+    // Inicializar iconos después de que todo esté listo
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    } else {
+        console.warn('Lucide no está disponible');
+    }
 
     // Lógica para manejar la sesión del dashboard
     const loginScreen = document.getElementById('login-screen');
@@ -39,7 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.teacher-only').forEach(el => el.classList.remove('hidden'));
             }
             // Inicializar los íconos de Lucide que ahora son visibles
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
 
         } catch (error) {
             // Si los datos están corruptos, se limpia la sesión y se muestra el login
@@ -53,70 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // (El estado por defecto ya muestra el login, así que no se necesita más código para eso)
     }
 
-    // NOTA: La lógica para manejar el botón de login y la selección de usuario
-    // también debe estar en este archivo, fuera de este bloque si es necesario.
-
-    // --- BASE DE DATOS DE ALUMNOS Y MATRÍCULAS ---
-    const studentData = {
-        
-        // ALUMNOS REALES
-        "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
-        "SOFIA CASTAÑEDA SUAREZ": { matricula: 5849, role: "Alumno" },
-        "JESUS MANUEL VEGA LOPEZ": { matricula: 5850, role: "Alumno" },
-        "EDGAR ALFREDO SANCHEZ LIRA": { matricula: 5858, role: "Alumno" },
-        "RICARDO ALEJANDRO ROMO GONZALEZ": { matricula: 5854, role: "Alumno" },
-        "KEVIN ANTONIO GUTIERREZ PACHECO": { matricula: 5848, role: "Alumno" },
-        "DIANA LAURA BAÑUELOS REYES": { matricula: 5847, role: "Alumno" },
-        "GEORGINA VILLALPANDO LÓPEZ": { matricula: 5856, role: "Alumno" },
-        "JAQUELINE GUADALUPE VERA CABRERA": { matricula: 5851, role: "Alumno" },
-        "MARIA SUSANA HERNANDEZ PAULA": { matricula: 5852, role: "Alumno" },
-        
-        // Profesora con contraseña LEONIDAS
-        "Dra. Antonieta Alejandra Acosta Grajales": { matricula: "PROF", role: "Profesor", password: "LEONIDAS" }
-    };
-
-    // --- REFERENCIAS AL DOM ---
-    const studentNameSelect = document.getElementById('studentName');
-    const studentMatriculaInput = document.getElementById('studentMatricula');
-    const studentPasswordInput = document.getElementById('studentPassword');
-    const loginButton = document.getElementById('login-button');
-    
-    const userAvatar = document.getElementById('user-avatar');
-    const userName = document.getElementById('user-name');
-    const userRole = document.getElementById('user-role');
-    const welcomeMessage = document.getElementById('welcome-message');
-
-    // --- INICIALIZACIÓN ---
-    function init() {
-        populateStudentDropdown();
-        setupLoginListeners();
-        lucide.createIcons(); // Inicializa los iconos
-    }
+    // Poblar el dropdown de estudiantes
+    populateStudentDropdown();
 
     // --- FUNCIONES DE AUTENTICACIÓN Y UI ---
 
-    // Llena la lista desplegable de nombres
-    function populateStudentDropdown() {
-        console.log('🔄 Poblando lista desplegable...');
-        console.log('📊 Datos de estudiantes:', studentData);
-        
-        const studentNames = Object.keys(studentData);
-        console.log('👥 Nombres encontrados:', studentNames);
-        
-        // Limpiar opciones existentes (excepto la primera)
-        while (studentNameSelect.children.length > 1) {
-            studentNameSelect.removeChild(studentNameSelect.lastChild);
-        }
-        
-        studentNames.forEach(name => {
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            studentNameSelect.appendChild(option);
-        });
-        
-        console.log('✅ Lista desplegable poblada con', studentNames.length, 'opciones');
-    }
     
     // Configura los listeners para el formulario de login
     function setupLoginListeners() {
@@ -133,9 +108,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = studentNameSelect.value;
         if (!name) return;
         
+        console.log('🔍 Usuario seleccionado:', name);
         const userData = studentData[name];
+        console.log('📊 Datos del usuario:', userData);
+        
         const matriculaContainer = document.getElementById('student-matricula-container');
         const passwordContainer = document.getElementById('student-password-container');
+        
+        console.log('📦 Contenedores encontrados:', {
+            matricula: !!matriculaContainer,
+            password: !!passwordContainer
+        });
         
         if (userData.role === 'Profesor') {
             // Mostrar campo de contraseña para profesores
@@ -155,7 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = studentNameSelect.value;
         const userData = studentData[name];
         
+        console.log('🔍 Validando:', { name, userData });
+        
         if (!name || !userData) {
+            console.log('❌ Datos faltantes');
             loginButton.disabled = true;
             return;
         }
@@ -163,12 +149,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let isValid = false;
         if (userData.role === 'Profesor') {
             const password = studentPasswordInput ? studentPasswordInput.value : '';
+            console.log('🔑 Validando contraseña:', { entered: password, expected: userData.password });
             isValid = password === userData.password;
         } else {
             const matricula = studentMatriculaInput.value;
+            console.log('🎓 Validando matrícula:', { entered: matricula, expected: userData.matricula });
             isValid = matricula && parseInt(matricula, 10) === userData.matricula;
         }
         
+        console.log('✅ Validación:', { isValid });
         loginButton.disabled = !isValid;
     }
 
@@ -273,17 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- FUNCIÓN PARA CERRAR SESIÓN ---
-    window.logout = function() {
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-            // Limpiar datos de sesión
-            localStorage.removeItem('userData');
-            sessionStorage.clear();
-            
-            // Recargar la página para volver al login
-            location.reload();
-        }
-    };
 
     // --- FUNCIÓN PARA LIMPIAR DATOS DE PRUEBA (solo para profesores) ---
     window.clearAllTestData = function() {
@@ -346,4 +324,42 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMobileNavigation();
 
 });
+
+// --- FUNCIÓN PARA CERRAR SESIÓN (FUERA DEL DOMContentLoaded) ---
+window.logout = function() {
+    try {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            // Limpiar datos de sesión
+            localStorage.removeItem('userData');
+            sessionStorage.clear();
+            
+            // Ocultar dashboard y mostrar login
+            const loginScreen = document.getElementById('login-screen');
+            const appLayout = document.querySelector('.app-layout');
+            
+            if (loginScreen && appLayout) {
+                loginScreen.classList.remove('hidden');
+                appLayout.classList.add('hidden');
+            }
+            
+            // Limpiar formulario de login
+            const studentNameSelect = document.getElementById('studentName');
+            const studentMatriculaInput = document.getElementById('studentMatricula');
+            const studentPasswordInput = document.getElementById('studentPassword');
+            
+            if (studentNameSelect) studentNameSelect.value = '';
+            if (studentMatriculaInput) studentMatriculaInput.value = '';
+            if (studentPasswordInput) studentPasswordInput.value = '';
+            
+            // Recargar la página para asegurar limpieza completa
+            setTimeout(() => {
+                location.reload();
+            }, 100);
+        }
+    } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+        // Fallback: recargar la página
+        location.reload();
+    }
+};
 
