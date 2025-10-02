@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentData = {
         // ALUMNOS DE PRUEBA (para testing - eliminar después)
         "Prueba 1": { matricula: 1234, role: "Alumno" },
-        "Prueba 2": { matricula: 1234, role: "Alumno" },
-        "Prueba 3": { matricula: 1234, role: "Alumno" },
+        "Prueba 2": { matricula: 1235, role: "Alumno" },
+        "Prueba 3": { matricula: 1236, role: "Alumno" },
         
         // ALUMNOS REALES
         "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
