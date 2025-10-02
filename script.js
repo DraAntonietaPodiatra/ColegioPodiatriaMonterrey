@@ -202,6 +202,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- FUNCIÓN PARA CERRAR SESIÓN ---
+    window.logout = function() {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            // Limpiar datos de sesión
+            localStorage.removeItem('userData');
+            sessionStorage.clear();
+            
+            // Recargar la página para volver al login
+            location.reload();
+        }
+    };
+
     // --- FUNCIÓN PARA LIMPIAR DATOS DE PRUEBA (solo para profesores) ---
     window.clearAllTestData = function() {
         if (confirm('¿Estás segura de que quieres limpiar todos los datos de prueba?\n\nEsto eliminará:\n- Progreso de exámenes de alumnos de prueba\n- Datos de localStorage de testing\n\n⚠️ Esta acción no se puede deshacer.')) {
