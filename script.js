@@ -46,22 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- BASE DE DATOS DE ALUMNOS Y MATRÍCULAS ---
     const studentData = {
-        // ALUMNOS DE PRUEBA (para testing - eliminar después)
-        "Prueba 1": { matricula: 1234, role: "Alumno" },
-        "Prueba 2": { matricula: 1235, role: "Alumno" },
-        "Prueba 3": { matricula: 1236, role: "Alumno" },
-        "Prueba 4": { matricula: 1237, role: "Alumno" },
-        "Prueba 5": { matricula: 1238, role: "Alumno" },
-        "Prueba 6": { matricula: 1239, role: "Alumno" },
-        "Prueba 7": { matricula: 1240, role: "Alumno" },
-        "Prueba 8": { matricula: 1241, role: "Alumno" },
-        "Prueba 9": { matricula: 1242, role: "Alumno" },
-        "Prueba 10": { matricula: 1243, role: "Alumno" },
-        "Prueba 11": { matricula: 1244, role: "Alumno" },
-        "Prueba 12": { matricula: 1245, role: "Alumno" },
-        "Prueba 13": { matricula: 1246, role: "Alumno" },
-        "Prueba 14": { matricula: 1247, role: "Alumno" },
-        "Prueba 15": { matricula: 1248, role: "Alumno" },
         
         // ALUMNOS REALES
         "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
@@ -280,9 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FUNCIÓN PARA LIMPIAR DATOS DE PRUEBA (solo para profesores) ---
     window.clearAllTestData = function() {
         if (confirm('¿Estás segura de que quieres limpiar todos los datos de prueba?\n\nEsto eliminará:\n- Progreso de exámenes de alumnos de prueba\n- Datos de localStorage de testing\n\n⚠️ Esta acción no se puede deshacer.')) {
-            // Limpiar localStorage de todos los alumnos de prueba
-            const testStudents = ['Prueba 1', 'Prueba 2', 'Prueba 3', 'Prueba 4', 'Prueba 5', 'Prueba 6', 'Prueba 7', 'Prueba 8', 'Prueba 9', 'Prueba 10'];
-            const testMatriculas = ['1234', '1235', '1236', '1237', '1238', '1239', '1240', '1241', '1242', '1243'];
+        // Limpiar localStorage de todos los alumnos de prueba
+        const testStudents = [];
+        const testMatriculas = [];
             
             let cleanedCount = 0;
             
