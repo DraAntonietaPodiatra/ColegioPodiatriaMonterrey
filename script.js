@@ -1,4 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Lógica para manejar la sesión del dashboard
+    const loginScreen = document.getElementById('login-screen');
+    const appLayout = document.querySelector('.app-layout');
+    const userDataString = localStorage.getItem('userData');
+
+    if (userDataString) {
+        // Si hay datos de sesión, muestra el dashboard
+        try {
+            const user = JSON.parse(userDataString);
+            
+            // Ocultar login y mostrar la app
+            loginScreen.classList.add('hidden');
+            appLayout.classList.remove('hidden');
+
+            // Personalizar la bienvenida y el perfil
+            document.getElementById('welcome-message').textContent = `¡Hola, ${user.name.split(' ')[0]}!`;
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-role').textContent = user.role;
+            
+            // Crear inicial para el avatar
+            const initials = user.name.split(' ').map(n => n[0]).join('');
+            document.getElementById('user-avatar').textContent = initials.substring(0, 2);
+
+            // Mostrar elementos solo para profesores
+            if (user.role === 'Profesor') {
+                document.querySelectorAll('.teacher-only').forEach(el => el.classList.remove('hidden'));
+            }
+            // Inicializar los íconos de Lucide que ahora son visibles
+            lucide.createIcons();
+
+        } catch (error) {
+            // Si los datos están corruptos, se limpia la sesión y se muestra el login
+            console.error('Error al parsear datos de sesión:', error);
+            localStorage.removeItem('userData');
+            loginScreen.classList.remove('hidden');
+            appLayout.classList.add('hidden');
+        }
+    } else {
+        // Si no hay sesión, aquí se debe configurar la lógica del formulario de login
+        // (El estado por defecto ya muestra el login, así que no se necesita más código para eso)
+    }
+
+    // NOTA: La lógica para manejar el botón de login y la selección de usuario
+    // también debe estar en este archivo, fuera de este bloque si es necesario.
 
     // --- BASE DE DATOS DE ALUMNOS Y MATRÍCULAS ---
     const studentData = {
@@ -36,8 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- REFERENCIAS AL DOM ---
-    const loginScreen = document.getElementById('login-screen');
-    const appLayout = document.querySelector('.app-layout');
     const studentNameSelect = document.getElementById('studentName');
     const studentMatriculaInput = document.getElementById('studentMatricula');
     const studentPasswordInput = document.getElementById('studentPassword');
@@ -50,31 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INICIALIZACIÓN ---
     function init() {
-        // Verificar si ya hay una sesión activa
-        checkExistingSession();
         populateStudentDropdown();
         setupLoginListeners();
         lucide.createIcons(); // Inicializa los iconos
-    }
-
-    // Verificar sesión existente
-    function checkExistingSession() {
-        const userData = localStorage.getItem('userData');
-        console.log('Verificando sesión existente:', userData);
-        
-        if (userData) {
-            try {
-                const { name, role } = JSON.parse(userData);
-                console.log('Sesión válida encontrada al cargar página:', name, role);
-                // Mostrar el dashboard directamente
-                showDashboard(name, role);
-            } catch (error) {
-                console.error('Error al cargar sesión existente:', error);
-                localStorage.removeItem('userData');
-            }
-        } else {
-            console.log('No hay sesión existente, mostrando pantalla de login');
-        }
     }
 
     // --- FUNCIONES DE AUTENTICACIÓN Y UI ---
