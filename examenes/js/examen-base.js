@@ -51,6 +51,11 @@ class ExamenPodiatria {
             "Prueba 8": { matricula: 1241, role: "Alumno" },
             "Prueba 9": { matricula: 1242, role: "Alumno" },
             "Prueba 10": { matricula: 1243, role: "Alumno" },
+            "Prueba 11": { matricula: 1244, role: "Alumno" },
+            "Prueba 12": { matricula: 1245, role: "Alumno" },
+            "Prueba 13": { matricula: 1246, role: "Alumno" },
+            "Prueba 14": { matricula: 1247, role: "Alumno" },
+            "Prueba 15": { matricula: 1248, role: "Alumno" },
             
             // ALUMNOS REALES
             "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
@@ -134,6 +139,11 @@ class ExamenPodiatria {
         if (!selectedName) return;
 
         const userData = this.studentData[selectedName];
+        
+        if (!userData) {
+            console.error('Usuario no encontrado:', selectedName);
+            return;
+        }
         
         if (userData.role === 'Profesor') {
             // Mostrar campo de contraseña para profesores
