@@ -381,7 +381,7 @@
         const GEMINI_API_KEY = "AIzaSyCdkq5Bjzp4fpyMndVKp2CZx5Be_WkEv5I"; // API key de Gemini
 
         async function callGroundedGemini(prompt, systemPrompt) {
-            const model = "gemini-1.5-flash-latest";
+            const model = "gemini-2.5-pro"; // Modelo más reciente y potente - Gemini 2.5 Pro
             if (!GEMINI_API_KEY) {
                 return {
                     text: "Error: La clave de la API de Gemini no ha sido configurada. Por favor, añádela en la variable 'GEMINI_API_KEY' dentro del código.",
@@ -457,7 +457,27 @@
             });
 
             const topics = Array.from(incorrectTopics).join(', ');
-            const systemPrompt = "Eres un profesor experto en podiatría creando un caso clínico para un estudiante. Basado en los siguientes temas, crea un caso práctico y conciso (150-200 palabras) que presente un escenario de un paciente. Basa tu respuesta en conocimiento de fuentes académicas y guías clínicas (como JAPMA, UpToDate, o libros de texto de podiatría). Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione.";
+            const systemPrompt = `Eres un profesor experto en podiatría creando un caso clínico para un estudiante. Basado en los siguientes temas, crea un caso práctico y conciso (150-200 palabras) que presente un escenario de un paciente realista. 
+
+Basate específicamente en estas fuentes académicas de podiatría:
+
+LIBROS DE TEXTO CLÁSICOS:
+- McGlamry's Comprehensive Textbook of Foot and Ankle Surgery
+- The Foot and Ankle: A Core Curriculum (Coughlin, Mann, Saltzman)
+- Surgery of the Foot and Ankle (Coughlin, Mann, Saltzman)
+- Podiatric Medicine and Surgery (Banks, Downey, Martin)
+- Nail Surgery (Nail Surgery Atlas - Haneke)
+- Dermatology - Bolognia (secciones de uñas)
+
+REVISTAS ACADÉMICAS:
+- Journal of the American Podiatric Medical Association (JAPMA)
+- Foot & Ankle International
+- Journal of Foot and Ankle Surgery
+- Dermatologic Surgery (secciones de cirugía ungueal)
+- International Journal of Dermatology
+- Journal of the European Academy of Dermatology and Venereology
+
+Finaliza con 1-2 preguntas desafiantes para que el estudiante reflexione sobre diagnóstico diferencial, técnica quirúrgica, o manejo postoperatorio.`;
             const userPrompt = `Temas a reforzar: ${topics}. Por favor, genera el caso de estudio.`;
 
             const result = await callGroundedGemini(userPrompt, systemPrompt);
