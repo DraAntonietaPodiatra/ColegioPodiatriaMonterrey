@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar menú móvil
     initializeMobileMenu();
     
-    // Cargar nombres de alumnos en el select
-    populateStudentDropdown();
+    // Inicializar todo
+    init();
 
     // Lógica para manejar la sesión del dashboard
     const loginScreen = document.getElementById('login-screen');
@@ -94,13 +94,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Llena la lista desplegable de nombres
     function populateStudentDropdown() {
+        console.log('🔄 Poblando lista desplegable...');
+        console.log('📊 Datos de estudiantes:', studentData);
+        
         const studentNames = Object.keys(studentData);
+        console.log('👥 Nombres encontrados:', studentNames);
+        
+        // Limpiar opciones existentes (excepto la primera)
+        while (studentNameSelect.children.length > 1) {
+            studentNameSelect.removeChild(studentNameSelect.lastChild);
+        }
+        
         studentNames.forEach(name => {
             const option = document.createElement('option');
             option.value = name;
             option.textContent = name;
             studentNameSelect.appendChild(option);
         });
+        
+        console.log('✅ Lista desplegable poblada con', studentNames.length, 'opciones');
     }
     
     // Configura los listeners para el formulario de login
