@@ -210,7 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             console.log('🎨 Creando nuevo gráfico de distribución');
-            new Chart(document.getElementById('scores-chart'), {
+            
+            // Asegurar que el contenedor tenga dimensiones fijas
+            const chartContainer = document.getElementById('scores-chart');
+            chartContainer.style.width = '100%';
+            chartContainer.style.height = '300px';
+            chartContainer.style.position = 'relative';
+            
+            new Chart(chartContainer, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(cleanedScoreData),
@@ -224,15 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: { 
                     responsive: true, 
                     maintainAspectRatio: false,
+                    aspectRatio: 1,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
                         }
                     },
                     animation: {
                         animateRotate: true,
-                        animateScale: true
-                    }
+                        animateScale: true,
+                        duration: 1000
+                    },
+                    cutout: '50%'
                 }
             });
         } else {
