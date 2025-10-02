@@ -125,7 +125,8 @@ body {
         display: block !important;
     }
     
-    .mobile-header {
+    /* Solo mostrar header móvil cuando NO esté en login */
+    .app-layout:not(.hidden) .mobile-header {
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -137,7 +138,8 @@ body {
     }
     
     /* Ocultar header móvil en pantalla de login */
-    .login-container .mobile-header {
+    .login-container .mobile-header,
+    .app-layout.hidden .mobile-header {
         display: none !important;
     }
     
