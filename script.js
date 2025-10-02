@@ -184,9 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Lógica de navegación (por ahora solo funciona el dashboard)
-                // ...
+                // Solo prevenir el comportamiento por defecto para enlaces internos (#)
+                if (link.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    // Lógica de navegación interna
+                    // ...
+                }
+                // Para enlaces externos (como reportes.html), permitir navegación normal
             });
         });
     }
