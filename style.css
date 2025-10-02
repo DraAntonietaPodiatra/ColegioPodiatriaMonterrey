@@ -216,10 +216,34 @@ body {
     .widget { padding: 25px; }
     
     /* Estilos específicos para móviles - LOGIN */
+    .login-container {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+    
     .login-card {
-        padding: 30px 20px;
-        margin: 10px;
+        padding: 20px 15px;
+        margin: 0;
         border-radius: 12px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .login-title {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+    
+    .login-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    
+    .institution-note {
+        font-size: 0.8rem;
+        margin-bottom: 20px;
     }
     
     .input-field {
@@ -256,28 +280,81 @@ body {
     
     .login-form {
         background: #f9fafb !important;
-        padding: 20px !important;
+        padding: 15px !important;
         border-radius: 12px !important;
-        margin: 20px 0 !important;
+        margin: 15px 0 !important;
+        gap: 15px !important;
+    }
+    
+    .form-group {
+        margin-bottom: 15px !important;
+    }
+    
+    .form-group label {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
+        display: block !important;
+    }
+    
+    .btn-primary {
+        width: 100% !important;
+        padding: 16px !important;
+        font-size: 16px !important;
+        min-height: 52px !important;
+        margin-top: 10px !important;
+        border-radius: 8px !important;
     }
 }
 
 /* Estilos adicionales para pantallas muy pequeñas */
 @media (max-width: 480px) {
-    .input-field {
-        font-size: 16px !important;
-        padding: 16px !important;
-        min-height: 52px !important;
+    .login-container {
+        padding: 5px;
+        padding-top: 10px;
     }
     
     .login-card {
-        padding: 20px 16px;
-        margin: 5px;
+        padding: 15px 12px;
+        margin: 0;
+        border-radius: 8px;
+    }
+    
+    .login-title {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+    
+    .login-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+    
+    .institution-note {
+        font-size: 0.75rem;
+        margin-bottom: 15px;
+    }
+    
+    .input-field {
+        font-size: 16px !important;
+        padding: 14px 12px !important;
+        min-height: 50px !important;
     }
     
     .login-form {
         margin: 10px 0 !important;
-        padding: 16px !important;
+        padding: 12px !important;
+        gap: 12px !important;
+    }
+    
+    .form-group {
+        margin-bottom: 12px !important;
+    }
+    
+    .btn-primary {
+        padding: 14px !important;
+        font-size: 15px !important;
+        min-height: 50px !important;
     }
 }
 
