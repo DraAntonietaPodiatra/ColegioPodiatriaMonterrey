@@ -174,16 +174,48 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('📊 Distribución de puntuaciones:', scoreDistribution);
         console.log('📊 Datos de finalización:', completionData);
 
-        // Validar que tenemos datos válidos para el gráfico de distribución
-        const validScores = Object.values(scoreDistribution).every(val => !isNaN(val) && isFinite(val) && val >= 0);
+        // Validar y limpiar datos para el gráfico de distribución
+        const cleanedScoreData = {};
+        let hasValidData = false;
         
-        if (validScores && Object.values(scoreDistribution).some(val => val > 0)) {
+        Object.keys(scoreDistribution).forEach(key => {
+            const value = scoreDistribution[key];
+            console.log(`🔍 Validando ${key}: ${value}`);
+            
+            if (!isNaN(value) && isFinite(value) && value >= 0 && Number.isInteger(value)) {
+                cleanedScoreData[key] = value;
+                if (value > 0) hasValidData = true;
+            } else {
+                console.warn(`⚠️ Valor inválido para ${key}: ${value}`);
+                cleanedScoreData[key] = 0;
+            }
+        });
+        
+        console.log('📊 Datos limpios para gráfico:', cleanedScoreData);
+        console.log('📊 ¿Tiene datos válidos?', hasValidData);
+        
+        if (hasValidData && Object.keys(cleanedScoreData).length > 0) {
+            // Verificar que Chart.js esté disponible
+            if (typeof Chart === 'undefined') {
+                console.error('❌ Chart.js no está cargado');
+                document.getElementById('scores-chart').innerHTML = '<p style="text-align: center; color: red; padding: 20px;">Error: Chart.js no está disponible</p>';
+                return;
+            }
+            
+            // Destruir gráfico anterior si existe
+            const existingChart = Chart.getChart('scores-chart');
+            if (existingChart) {
+                console.log('🗑️ Destruyendo gráfico anterior');
+                existingChart.destroy();
+            }
+            
+            console.log('🎨 Creando nuevo gráfico de distribución');
             new Chart(document.getElementById('scores-chart'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(scoreDistribution),
+                    labels: Object.keys(cleanedScoreData),
                     datasets: [{
-                        data: Object.values(scoreDistribution),
+                        data: Object.values(cleanedScoreData),
                         backgroundColor: ['#f8d7da', '#fff3cd', '#d4edda'],
                         borderColor: ['#721c24', '#856404', '#155724'],
                         borderWidth: 1
@@ -196,12 +228,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         legend: {
                             position: 'bottom'
                         }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
                     }
                 }
             });
         } else {
-            console.warn('⚠️ Datos inválidos para gráfico de distribución de puntuaciones:', scoreDistribution);
-            document.getElementById('scores-chart').innerHTML = '<p style="text-align: center; color: #666;">No hay datos válidos para mostrar</p>';
+            console.warn('⚠️ No hay datos válidos para gráfico de distribución');
+            document.getElementById('scores-chart').innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No hay datos válidos para mostrar</p>';
         }
 
         // Validar que tenemos datos válidos para el gráfico de finalización
