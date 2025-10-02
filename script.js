@@ -55,15 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Verificar sesión existente
     function checkExistingSession() {
         const userData = localStorage.getItem('userData');
+        console.log('Verificando sesión existente:', userData);
+        
         if (userData) {
             try {
                 const { name, role } = JSON.parse(userData);
+                console.log('Sesión válida encontrada al cargar página:', name, role);
                 // Mostrar el dashboard directamente
                 showDashboard(name, role);
             } catch (error) {
                 console.error('Error al cargar sesión existente:', error);
                 localStorage.removeItem('userData');
             }
+        } else {
+            console.log('No hay sesión existente, mostrando pantalla de login');
         }
     }
 
