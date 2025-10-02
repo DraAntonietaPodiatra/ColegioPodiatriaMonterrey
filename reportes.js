@@ -2,6 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // URL del Web App de Google Apps Script
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbuJHpy8GujcSwcPwPJVQj2MUIYXhamvtw85Co5GBX_MrnEFMY9EZ_Z8aIWXKK6x949A/exec";
 
+    // --- FUNCIÓN PARA CERRAR SESIÓN ---
+    window.logout = function() {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            // Limpiar datos de sesión
+            localStorage.removeItem('userData');
+            sessionStorage.clear();
+            
+            // Redirigir al login
+            window.location.href = 'index.html';
+        }
+    };
+
     const loadingSpinner = document.getElementById('loading-spinner');
     const reportContent = document.getElementById('report-content');
 
