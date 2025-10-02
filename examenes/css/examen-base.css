@@ -784,3 +784,83 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* =================================================================== */
+/* ESTILOS MEJORADOS PARA CASO DE ESTUDIO                             */
+/* =================================================================== */
+
+/* Mejorar el formato del texto del caso de estudio */
+.texto-caso-estudio {
+    line-height: 1.8 !important;
+    color: var(--text-dark) !important;
+    margin-bottom: 20px;
+    font-size: 16px !important;
+    white-space: normal !important;
+}
+
+/* Párrafos con mejor espaciado */
+.texto-caso-estudio p {
+    margin-bottom: 16px;
+    text-align: justify;
+}
+
+/* Títulos de preguntas */
+.pregunta-caso {
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+    border-left: 4px solid var(--colegio-gold);
+    border-radius: 4px;
+    margin: 20px 0;
+    font-weight: 700;
+    color: var(--colegio-dark-blue);
+}
+
+/* Títulos de respuestas */
+.respuesta-caso {
+    background-color: #e8f5e8;
+    padding: 12px 16px;
+    border-left: 4px solid var(--success);
+    border-radius: 4px;
+    margin: 20px 0;
+    font-weight: 700;
+    color: var(--colegio-dark-blue);
+}
+
+/* Separador entre caso y respuestas */
+.separador-respuestas {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--colegio-gold), transparent);
+    margin: 30px 0;
+}
+
+/* Texto en negrita */
+.texto-caso-estudio strong {
+    font-weight: 700;
+    color: var(--colegio-dark-blue);
+}
+
+/* Texto en cursiva */
+.texto-caso-estudio em {
+    font-style: italic;
+    color: var(--text-light);
+}
+
+/* Listas con viñetas */
+.texto-caso-estudio ul {
+    margin: 16px 0;
+    padding-left: 24px;
+}
+
+.texto-caso-estudio li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+/* Líneas horizontales */
+.texto-caso-estudio hr {
+    margin: 24px 0;
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+}
