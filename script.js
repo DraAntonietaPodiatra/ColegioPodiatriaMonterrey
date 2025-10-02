@@ -45,9 +45,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INICIALIZACIÓN ---
     function init() {
+        // Verificar si ya hay una sesión activa
+        checkExistingSession();
         populateStudentDropdown();
         setupLoginListeners();
         lucide.createIcons(); // Inicializa los iconos
+    }
+
+    // Verificar sesión existente
+    function checkExistingSession() {
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+            try {
+                const { name, role } = JSON.parse(userData);
+                // Mostrar el dashboard directamente
+                showDashboard(name, role);
+            } catch (error) {
+                console.error('Error al cargar sesión existente:', error);
+                localStorage.removeItem('userData');
+            }
+        }
     }
 
     // --- FUNCIONES DE AUTENTICACIÓN Y UI ---
