@@ -224,12 +224,13 @@ body {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 15px 20px;
+        padding: 12px 15px;
         background: var(--paper);
         border-bottom: 1px solid var(--border-color);
         position: sticky;
         top: 0;
         z-index: 100;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
     .mobile-menu-btn {
@@ -239,17 +240,47 @@ body {
         color: var(--colegio-dark-blue);
         cursor: pointer;
         padding: 8px;
+        flex-shrink: 0;
+    }
+    
+    .mobile-center {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        justify-content: center;
     }
     
     .mobile-logo {
-        height: 40px;
+        height: 35px;
         width: auto;
+        flex-shrink: 0;
+    }
+    
+    .mobile-platform-info {
+        text-align: left;
+    }
+    
+    .mobile-platform-info h4 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--colegio-dark-blue);
+        margin: 0;
+        line-height: 1.2;
+    }
+    
+    .mobile-platform-info p {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.2;
     }
     
     .mobile-user-info {
         display: flex;
         align-items: center;
         gap: 10px;
+        flex-shrink: 0;
     }
     
     .mobile-user-avatar {
@@ -263,6 +294,31 @@ body {
         justify-content: center;
         font-weight: 700;
         font-size: 0.9rem;
+    }
+    
+    /* HEADER MÓVIL PEQUEÑO */
+    @media (max-width: 480px) {
+        .mobile-header {
+            padding: 10px 12px;
+        }
+        
+        .mobile-logo {
+            height: 30px;
+        }
+        
+        .mobile-platform-info h4 {
+            font-size: 0.8rem;
+        }
+        
+        .mobile-platform-info p {
+            font-size: 0.7rem;
+        }
+        
+        .mobile-user-avatar {
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+        }
     }
     
     .main-sidebar { 
