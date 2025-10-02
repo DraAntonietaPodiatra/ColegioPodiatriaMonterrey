@@ -532,6 +532,12 @@ class ExamenPodiatria {
         const results = this.calculateResults();
         this.renderFinalResults(results);
         this.saveFinalResults(results);
+        
+        // Mostrar el contenedor del caso de estudio
+        const caseStudyContainer = document.getElementById('gemini-case-study-container');
+        if (caseStudyContainer) {
+            caseStudyContainer.style.display = 'block';
+        }
     }
 
     // --- CALCULAR RESULTADOS ---
