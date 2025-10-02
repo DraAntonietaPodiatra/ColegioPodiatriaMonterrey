@@ -151,36 +151,49 @@ body {
         display: none !important;
     }
     
-    /* Botones del header móvil */
+    /* Botones del header móvil - MEJORADOS */
     .mobile-logout-btn,
     .mobile-reports-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid var(--colegio-gold);
-        border-radius: 8px;
-        color: white;
-        cursor: pointer;
-        padding: 8px 12px;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        min-width: 80px;
-        height: 40px;
+        background: var(--colegio-gold) !important;
+        border: 2px solid var(--colegio-gold) !important;
+        border-radius: 10px !important;
+        color: var(--colegio-dark-blue) !important;
+        cursor: pointer !important;
+        padding: 12px 16px !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        min-width: 100px !important;
+        min-height: 48px !important;
+        box-shadow: 0 4px 12px rgba(197, 164, 115, 0.3) !important;
+        text-decoration: none !important;
+        white-space: nowrap !important;
     }
     
     .mobile-logout-btn:hover,
     .mobile-reports-btn:hover {
-        background: var(--colegio-gold);
-        color: var(--colegio-dark-blue);
+        background: white !important;
+        color: var(--colegio-dark-blue) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(197, 164, 115, 0.4) !important;
+    }
+    
+    .mobile-logout-btn:active,
+    .mobile-reports-btn:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 8px rgba(197, 164, 115, 0.3) !important;
     }
     
     .mobile-logout-btn .btn-text,
     .mobile-reports-btn .btn-text {
-        font-size: 0.8rem !important;
-        font-weight: 600 !important;
-        white-space: nowrap;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important;
+        color: inherit !important;
     }
     
     .mobile-user-info {
