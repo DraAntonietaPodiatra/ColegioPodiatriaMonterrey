@@ -136,25 +136,27 @@ body {
     
     .mobile-center {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 15px;
+        gap: 8px;
         flex: 1;
         justify-content: center;
     }
     
     .mobile-logo {
-        height: 45px;
+        height: 35px;
         width: auto;
         flex-shrink: 0;
         filter: brightness(0) invert(1);
+        order: -1;
     }
     
     .mobile-platform-info {
-        text-align: left;
+        text-align: center;
     }
     
     .mobile-platform-info h4 {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
         font-weight: 800;
         color: white;
         margin: 0;
@@ -163,7 +165,7 @@ body {
     }
     
     .mobile-platform-info p {
-        font-size: 0.9rem;
+        font-size: 1rem;
         color: var(--colegio-gold);
         margin: 0;
         line-height: 1.2;
@@ -227,15 +229,15 @@ body {
         }
         
         .mobile-logo {
-            height: 40px;
+            height: 30px;
         }
         
         .mobile-platform-info h4 {
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         
         .mobile-platform-info p {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         
         .mobile-user-avatar {
