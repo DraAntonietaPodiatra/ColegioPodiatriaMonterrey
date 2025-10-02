@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
         "Prueba 1": { matricula: 1234, role: "Alumno" },
         "Prueba 2": { matricula: 1235, role: "Alumno" },
         "Prueba 3": { matricula: 1236, role: "Alumno" },
+        "Prueba 4": { matricula: 1237, role: "Alumno" },
+        "Prueba 5": { matricula: 1238, role: "Alumno" },
+        "Prueba 6": { matricula: 1239, role: "Alumno" },
+        "Prueba 7": { matricula: 1240, role: "Alumno" },
+        "Prueba 8": { matricula: 1241, role: "Alumno" },
+        "Prueba 9": { matricula: 1242, role: "Alumno" },
+        "Prueba 10": { matricula: 1243, role: "Alumno" },
         
         // ALUMNOS REALES
         "CESARINA SOLEDAD LOPEZ FERNANDEZ": { matricula: 5853, role: "Alumno" },
@@ -194,6 +201,43 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // --- FUNCIÓN PARA LIMPIAR DATOS DE PRUEBA (solo para profesores) ---
+    window.clearAllTestData = function() {
+        if (confirm('¿Estás segura de que quieres limpiar todos los datos de prueba?\n\nEsto eliminará:\n- Progreso de exámenes de alumnos de prueba\n- Datos de localStorage de testing\n\n⚠️ Esta acción no se puede deshacer.')) {
+            // Limpiar localStorage de todos los alumnos de prueba
+            const testStudents = ['Prueba 1', 'Prueba 2', 'Prueba 3', 'Prueba 4', 'Prueba 5', 'Prueba 6', 'Prueba 7', 'Prueba 8', 'Prueba 9', 'Prueba 10'];
+            const testMatriculas = ['1234', '1235', '1236', '1237', '1238', '1239', '1240', '1241', '1242', '1243'];
+            
+            let cleanedCount = 0;
+            
+            testMatriculas.forEach(matricula => {
+                // Limpiar datos de localStorage para cada matrícula de prueba
+                const examId = 'cirugia_ungueal_parcial1';
+                const completedKey = `exam_completed_${examId}_${matricula}`;
+                const stateKey = `exam_state_${examId}_${matricula}`;
+                const reviewKey = `exam_review_${examId}_${matricula}`;
+                
+                if (localStorage.getItem(completedKey)) {
+                    localStorage.removeItem(completedKey);
+                    cleanedCount++;
+                }
+                if (localStorage.getItem(stateKey)) {
+                    localStorage.removeItem(stateKey);
+                    cleanedCount++;
+                }
+                if (localStorage.getItem(reviewKey)) {
+                    localStorage.removeItem(reviewKey);
+                    cleanedCount++;
+                }
+            });
+            
+            alert(`✅ Datos de prueba limpiados exitosamente.\n\nSe eliminaron ${cleanedCount} entradas de localStorage.\n\nLos alumnos de prueba ahora pueden volver a hacer los exámenes.`);
+            
+            // Recargar la página para reflejar los cambios
+            location.reload();
+        }
+    };
 
     // --- EJECUTAR INICIALIZACIÓN ---
     init();
