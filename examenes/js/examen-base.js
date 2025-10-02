@@ -12,18 +12,17 @@ class ExamenPodiatria {
         this.startTime = Date.now();
         this.examAlreadyCompleted = false;
         
+        // Inicialización optimizada - configurar eventos inmediatamente
+        this.setupEventListeners();
+        
+        // Inicialización asíncrona en segundo plano
         this.init();
     }
 
     async init() {
-        // Mostrar indicador de carga inicial
-        this.showLoadingIndicator('Cargando examen...');
-        
+        // NO mostrar indicador aquí - se maneja desde el HTML
         try {
-            // Configurar eventos
-            this.setupEventListeners();
-            
-            // Verificar estado del examen
+            // Verificar estado del examen de forma asíncrona
             await this.checkExamCompletion();
             
             if (!this.examAlreadyCompleted) {
@@ -31,14 +30,18 @@ class ExamenPodiatria {
             }
         } catch (error) {
             console.error('Error durante la inicialización:', error);
-        } finally {
-            // Asegurar que el indicador de carga se oculte
-            this.hideLoadingIndicator();
         }
+        // NO ocultar indicador aquí - se maneja desde el HTML
     }
 
     // --- BASE DE DATOS DE ALUMNOS Y PROFESORES ---
     get studentData() {
+        // Si se pasaron datos en la configuración, usarlos (optimización)
+        if (this.config.studentData) {
+            return this.config.studentData;
+        }
+        
+        // Fallback: datos por defecto
         return {
             
             // ALUMNOS REALES
