@@ -5,8 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar menú móvil
     initializeMobileMenu();
     
-    // Inicializar todo
-    init();
+    // Cargar nombres de alumnos en el select
+    populateStudentDropdown();
+    
+    // Configurar listeners
+    setupLoginListeners();
 
     // Lógica para manejar la sesión del dashboard
     const loginScreen = document.getElementById('login-screen');
