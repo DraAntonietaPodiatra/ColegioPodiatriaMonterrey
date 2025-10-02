@@ -71,7 +71,7 @@
                         <i data-lucide="clipboard-check" class="stat-icon"></i>
                         <div class="stat-info">
                             <span id="total-exams" class="stat-number">0</span>
-                            <span class="stat-label">Estudiantes Únicos</span>
+                            <span class="stat-label">Total de Calificaciones</span>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -87,11 +87,15 @@
                 <section class="charts-grid">
                     <div class="chart-container widget">
                         <h2>Distribución de Calificaciones</h2>
-                        <canvas id="scores-chart"></canvas>
+                        <div class="chart-wrapper">
+                            <canvas id="scores-chart"></canvas>
+                        </div>
                     </div>
                     <div class="chart-container widget">
                         <h2>Completados por Examen</h2>
-                        <canvas id="completion-chart"></canvas>
+                        <div class="chart-wrapper">
+                            <canvas id="completion-chart"></canvas>
+                        </div>
                     </div>
                 </section>
 
