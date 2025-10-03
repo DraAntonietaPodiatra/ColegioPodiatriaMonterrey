@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Teleprompter - Dr. Jesús Carrillo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Evita el scroll manual */
+        }
+        #teleprompter {
+            font-size: 8vw; /* Tamaño de letra relativo al ancho de la pantalla */
+            line-height: 1.3;
+            font-weight: bold;
+            text-align: center;
+            padding: 50vh 10vw 150vh 10vw; /* Padding superior e inferior muy grande para permitir el scroll completo */
+            transition: font-size 0.2s; /* Transición suave al cambiar tamaño */
+        }
+        #teleprompter p {
+            margin-bottom: 1.2em; /* Espacio entre párrafos */
+        }
+        #controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(30, 30, 30, 0.9);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: #fff;
+            font-size: 16px;
+        }
+        #controls button {
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+            border-radius: 5px;
+            font-size: 20px;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+        }
+        #controls button#playPauseBtn {
+            width: 100px;
+            background-color: #28a745;
+        }
+        #controls span {
+            margin: 0 5px;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="teleprompter">
+        <h3>Video 1: ¿Qué hace un Médico Internista?</h3>
+        <p>Hola, soy el Dr. Jesús Carrillo, médico internista. Quizás te preguntes qué hacemos los internistas. Somos como el médico de cabecera para los adultos.</p>
+        <p>Nos especializamos en atender problemas complejos de salud, desde la diabetes y la presión alta hasta un diagnóstico difícil. Vemos tu salud de manera completa.</p>
+        <p>En Centro Médico Carrillo, estoy para ayudarte a entender y controlar tu salud. Tu bienestar es mi prioridad.</p>
+        
+        <h3>Video 2: La Presión Alta, el Enemigo Silencioso</h3>
+        <p>Hablemos de la presión alta. Muchos la llaman 'el enemigo silencioso' porque a menudo no da síntomas, pero puede dañar tu corazón y tus riñones.</p>
+        <p>La buena noticia es que se puede controlar. Con cambios sencillos como comer menos sal, caminar un poco cada día y, si es necesario, con el medicamento correcto, puedes proteger tu salud.</p>
+        <p>No esperes a sentirte mal. Revisar tu presión es rápido, no duele y puede salvarte la vida. Estamos aquí para cuidarte.</p>
+    </div>
+
+    <div id="controls">
+        <div class="control-group">
+            <button id="speedDown">-</button>
+            <span>Velocidad</span>
+            <button id="speedUp">+</button>
+        </div>
+        <button id="playPauseBtn">Iniciar</button>
+        <div class="control-group">
+            <button id="fontDown">-</button>
+            <span>Letra</span>
+            <button id="fontUp">+</button>
+        </div>
+    </div>
+
+    <script>
+        const teleprompter = document.getElementById('teleprompter');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const speedUpBtn = document.getElementById('speedUp');
+        const speedDownBtn = document.getElementById('speedDown');
+        const fontUpBtn = document.getElementById('fontUp');
+        const fontDownBtn = document.getElementById('fontDown');
+
+        let isScrolling = false;
+        let scrollInterval;
+        let speed = 2; // Velocidad inicial (1-10)
+        let fontSize = 8; // Tamaño de letra inicial en vw
+
+        function startScroll() {
+            isScrolling = true;
+            playPauseBtn.textContent = 'Pausar';
+            playPauseBtn.style.backgroundColor = '#dc3545';
+            scrollInterval = setInterval(() => {
+                window.scrollBy(0, 1);
+            }, 100 / speed);
+        }
+
+        function stopScroll() {
+            isScrolling = false;
+            playPauseBtn.textContent = 'Iniciar';
+            playPauseBtn.style.backgroundColor = '#28a745';
+            clearInterval(scrollInterval);
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isScrolling) {
+                stopScroll();
+            } else {
+                startScroll();
+            }
+        });
+
+        speedUpBtn.addEventListener('click', () => {
+            if (speed < 10) {
+                speed++;
+                if (isScrolling) {
+                    stopScroll();
+                    startScroll();
+                }
+            }
+        });
+
+        speedDownBtn.addEventListener('click', () => {
+            if (speed > 1) {
+                speed--;
+                if (isScrolling) {
+                    stopScroll();
+                    startScroll();
+                }
+            }
+        });
+
+        fontUpBtn.addEventListener('click', () => {
+            if (fontSize < 15) {
+                fontSize += 0.5;
+                teleprompter.style.fontSize = fontSize + 'vw';
+            }
+        });
+
+        fontDownBtn.addEventListener('click', () => {
+            if (fontSize > 3) {
+                fontSize -= 0.5;
+                teleprompter.style.fontSize = fontSize + 'vw';
+            }
+        });
+
+        // Reiniciar scroll al principio al cargar la página
+        window.addEventListener('load', () => {
+            window.scrollTo(0, 0);
+        });
+    </script>
+
+</body>
+</html>
