@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Teleprompter Pro - Traumatólogo (Dr. Efraín Martínez)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 0, 0, 0.6);
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+        #teleprompter {
+            font-size: 8vw;
+            line-height: 1.3;
+            font-weight: bold;
+            text-align: center;
+            padding: 50vh 10vw 150vh 10vw;
+            transition: font-size 0.2s;
+        }
+        #teleprompter h3 {
+            color: #f1c40f;
+            font-size: 0.8em;
+        }
+        #teleprompter p {
+            margin-bottom: 1.2em;
+        }
+        .script-content {
+            display: none;
+        }
+        .script-content.active {
+            display: block;
+        }
+        #controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(30, 30, 30, 0.9);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #controls button {
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+            border-radius: 5px;
+            font-size: 20px;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+        }
+        #controls button#playPauseBtn {
+            width: 100px;
+            background-color: #28a745;
+        }
+        #controls button#resetBtn {
+            width: 50px;
+            font-size: 24px;
+        }
+        #controls span {
+            margin: 0 5px;
+            min-width: 40px;
+            text-align: center;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+        }
+        #video-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(30, 30, 30, 0.9);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .video-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+            border-radius: 5px;
+        }
+        .video-btn.active {
+            background-color: #007bff;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="video-selector">
+        <button id="btnVideo1" class="video-btn">Video 1: Qué Hago</button>
+        <button id="btnVideo2" class="video-btn">Video 2: Fractura Cadera</button>
+    </div>
+
+    <div id="teleprompter">
+        <div id="script1" class="script-content">
+            <h3>Diálogo 1: ¿Qué hace un traumatólogo?</h3>
+            <p>Hola, soy el Dr. Efraín Martínez, traumatólogo. Me encargo de cuidar tus huesos, articulaciones y músculos, desde lesiones deportivas hasta fracturas.</p>
+            <p>Si tienes dolor o una lesión, estoy aquí para ayudarte a recuperar tu movimiento y bienestar.</p>
+        </div>
+        
+        <div id="script2" class="script-content">
+            <h3>Diálogo 2: Fractura de cadera</h3>
+            <p>Una caída puede causar fractura de cadera, sobre todo en adultos mayores. Es muy dolorosa y necesita atención rápida.</p>
+            <p>Aquí tenemos equipo y experiencia para tratarte y ayudarte a recuperar tu independencia. Si hay dolor fuerte tras una caída, ven de inmediato. Cada minuto cuenta.</p>
+        </div>
+    </div>
+
+    <div id="controls">
+        <div class="control-group">
+            <button id="speedDown">-</button>
+            <span id="speedDisplay">4x</span>
+            <button id="speedUp">+</button>
+        </div>
+        <button id="playPauseBtn">Iniciar</button>
+        <button id="resetBtn">🔃</button>
+        <div class="control-group">
+            <button id="fontDown">-</button>
+            <span id="fontDisplay">8</span>
+            <button id="fontUp">+</button>
+        </div>
+    </div>
+
+    <script>
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const speedUpBtn = document.getElementById('speedUp');
+        const speedDownBtn = document.getElementById('speedDown');
+        const fontUpBtn = document.getElementById('fontUp');
+        const fontDownBtn = document.getElementById('fontDown');
+        const resetBtn = document.getElementById('resetBtn');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const fontDisplay = document.getElementById('fontDisplay');
+        const btnVideo1 = document.getElementById('btnVideo1');
+        const btnVideo2 = document.getElementById('btnVideo2');
+        const script1 = document.getElementById('script1');
+        const script2 = document.getElementById('script2');
+        const teleprompter = document.getElementById('teleprompter');
+
+        let isScrolling = false;
+        let scrollInterval;
+        const speedLevels = [4, 5, 6, 7, 8];
+        let currentSpeedIndex = 0;
+        const baseInterval = 48;
+        let fontSize = 8;
+        
+        let activeScript = 1;
+        let scrollPositions = { 1: 0, 2: 0 };
+
+        function switchVideo(videoNumber) {
+            if (isScrolling) {
+                scrollPositions[activeScript] = window.scrollY;
+                stopScroll();
+            } else {
+                 scrollPositions[activeScript] = window.scrollY > 5 ? window.scrollY : scrollPositions[activeScript] || 0;
+            }
+            
+            activeScript = videoNumber;
+            
+            script1.classList.toggle('active', activeScript === 1);
+            btnVideo1.classList.toggle('active', activeScript === 1);
+            script2.classList.toggle('active', activeScript === 2);
+            btnVideo2.classList.toggle('active', activeScript === 2);
+
+            window.scrollTo(0, scrollPositions[activeScript] || 0);
+        }
+
+        btnVideo1.addEventListener('click', () => switchVideo(1));
+        btnVideo2.addEventListener('click', () => switchVideo(2));
+        
+        resetBtn.addEventListener('click', () => {
+            stopScroll();
+            scrollPositions[activeScript] = 0;
+            window.scrollTo(0, 0);
+        });
+
+        function updateDisplays() {
+            speedDisplay.textContent = speedLevels[currentSpeedIndex] + 'x';
+            fontDisplay.textContent = fontSize;
+        }
+
+        function startScroll() {
+            isScrolling = true;
+            playPauseBtn.textContent = 'Pausar';
+            playPauseBtn.style.backgroundColor = '#dc3545';
+            const interval = baseInterval / speedLevels[currentSpeedIndex];
+            scrollInterval = setInterval(() => { window.scrollBy(0, 1); }, interval);
+        }
+
+        function stopScroll() {
+            isScrolling = false;
+            playPauseBtn.textContent = 'Iniciar';
+            playPauseBtn.style.backgroundColor = '#28a745';
+            clearInterval(scrollInterval);
+        }
+
+        playPauseBtn.addEventListener('click', () => { isScrolling ? stopScroll() : startScroll(); });
+
+        speedUpBtn.addEventListener('click', () => {
+            if (currentSpeedIndex < speedLevels.length - 1) {
+                currentSpeedIndex++;
+                updateDisplays();
+                if (isScrolling) { stopScroll(); startScroll(); }
+            }
+        });
+
+        speedDownBtn.addEventListener('click', () => {
+            if (currentSpeedIndex > 0) {
+                currentSpeedIndex--;
+                updateDisplays();
+                if (isScrolling) { stopScroll(); startScroll(); }
+            }
+        });
+
+        fontUpBtn.addEventListener('click', () => {
+            if (fontSize < 15) {
+                fontSize++;
+                teleprompter.style.fontSize = fontSize + 'vw';
+                updateDisplays();
+            }
+        });
+
+        fontDownBtn.addEventListener('click', () => {
+            if (fontSize > 4) {
+                fontSize--;
+                teleprompter.style.fontSize = fontSize + 'vw';
+                updateDisplays();
+            }
+        });
+        
+        window.addEventListener('load', () => {
+            switchVideo(1);
+            updateDisplays();
+        });
+    </script>
+
+</body>
+</html>
