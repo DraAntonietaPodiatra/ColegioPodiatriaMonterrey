@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Teleprompter Pro - Dr. Jesús Carrillo</title>
+    <title>Teleprompter Pro - Enfermería</title>
     <style>
         * {
             box-sizing: border-box;
@@ -43,10 +43,10 @@
             margin-bottom: 1.2em;
         }
         .script-content {
-            display: none; /* Oculta ambos guiones por defecto */
+            display: none;
         }
         .script-content.active {
-            display: block; /* Muestra solo el guion activo */
+            display: block;
         }
         #controls {
             position: fixed;
@@ -77,6 +77,10 @@
         #controls button#playPauseBtn {
             width: 100px;
             background-color: #28a745;
+        }
+        #controls button#resetBtn {
+            width: 50px;
+            font-size: 24px;
         }
         #controls span {
             margin: 0 5px;
@@ -117,23 +121,23 @@
 <body>
 
     <div id="video-selector">
-        <button id="btnVideo1" class="video-btn">Ver Video 1</button>
-        <button id="btnVideo2" class="video-btn">Ver Video 2</button>
+        <button id="btnVideo1" class="video-btn">Salvador Soriano</button>
+        <button id="btnVideo2" class="video-btn">Vanesa Salazar</button>
     </div>
 
     <div id="teleprompter">
         <div id="script1" class="script-content">
-            <h3>Video 1: ¿Qué hace un Médico Internista?</h3>
-            <p>Hola, soy el Dr. Jesús Carrillo, médico internista. Quizás te preguntes qué hacemos los internistas. Somos como el médico de cabecera para los adultos.</p>
-            <p>Nos especializamos en atender problemas complejos de salud, desde la diabetes y la presión alta hasta un diagnóstico difícil. Vemos tu salud de manera completa.</p>
-            <p>En Centro Médico Carrillo, estoy para ayudarte a entender y controlar tu salud. Tu bienestar es mi prioridad.</p>
+            <h3>Video 1: El Trabajo de Enfermería</h3>
+            <p>Hola, soy Salvador Soriano, parte del equipo de enfermería del Centro Médico Carrillo. Somos quienes estamos a tu lado día y noche durante tu estancia en el hospital.</p>
+            <p>Nuestro trabajo es mucho más que poner inyecciones. Monitoreamos tu recuperación, te damos tus medicamentos a tiempo, te ayudamos con tus curaciones y, sobre todo, estamos para escucharte y darte tranquilidad.</p>
+            <p>Somos el corazón del cuidado en el hospital. Tu comodidad y bienestar son nuestra razón de ser.</p>
         </div>
         
         <div id="script2" class="script-content">
-            <h3>Video 2: La Presión Alta, el Enemigo Silencioso</h3>
-            <p>Hablemos de la presión alta. Muchos la llaman 'el enemigo silencioso' porque a menudo no da síntomas, pero puede dañar tu corazón y tus riñones.</p>
-            <p>La buena noticia es que se puede controlar. Con cambios sencillos como comer menos sal, caminar un poco cada día y, si es necesario, con el medicamento correcto, puedes proteger tu salud.</p>
-            <p>No esperes a sentirte mal. Revisar tu presión es rápido, no duele y puede salvarte la vida. Estamos aquí para cuidarte.</p>
+            <h3>Video 2: ¿Qué cuidados brindamos durante tu hospitalización?</h3>
+            <p>Hola, soy la enfermera Vanesa Salazar. Cuando te quedas en el hospital, nuestro trabajo es acompañarte en cada momento. Te vigilamos de cerca: tomamos tus signos vitales, administramos tus tratamientos y resolvemos cualquier molestia que tengas.</p>
+            <p>También te apoyamos en actividades básicas: desde moverte en la cama hasta darte la confianza para preguntar cualquier cosa. Queremos que nunca te sientas solo o inseguro.</p>
+            <p>Para nosotros, tu bienestar físico y emocional dentro del hospital es lo más importante. Estamos aquí para cuidarte de corazón.</p>
         </div>
     </div>
 
@@ -144,6 +148,7 @@
             <button id="speedUp">+</button>
         </div>
         <button id="playPauseBtn">Iniciar</button>
+        <button id="resetBtn">🔃</button>
         <div class="control-group">
             <button id="fontDown">-</button>
             <span id="fontDisplay">8</span>
@@ -152,32 +157,37 @@
     </div>
 
     <script>
-        const teleprompter = document.getElementById('teleprompter');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const speedUpBtn = document.getElementById('speedUp');
         const speedDownBtn = document.getElementById('speedDown');
         const fontUpBtn = document.getElementById('fontUp');
         const fontDownBtn = document.getElementById('fontDown');
+        const resetBtn = document.getElementById('resetBtn');
         const speedDisplay = document.getElementById('speedDisplay');
         const fontDisplay = document.getElementById('fontDisplay');
         const btnVideo1 = document.getElementById('btnVideo1');
         const btnVideo2 = document.getElementById('btnVideo2');
         const script1 = document.getElementById('script1');
         const script2 = document.getElementById('script2');
+        const teleprompter = document.getElementById('teleprompter');
 
         let isScrolling = false;
         let scrollInterval;
-        const speedLevels = [1, 2, 3, 4, 6, 8, 12, 16]; // Velocidades actualizadas
+        const speedLevels = [1, 2, 3, 4, 6, 8, 12, 16];
         let currentSpeedIndex = 1;
         const baseInterval = 48;
         let fontSize = 8;
         
         let activeScript = 1;
-        let scrollPositions = { 1: 0, 2: 0 }; // Guarda la posición de cada guion
+        let scrollPositions = { 1: 0, 2: 0 };
 
         function switchVideo(videoNumber) {
-            stopScroll();
-            scrollPositions[activeScript] = window.scrollY; // Guarda la posición actual
+            if (isScrolling) {
+                scrollPositions[activeScript] = window.scrollY;
+                stopScroll();
+            } else {
+                 scrollPositions[activeScript] = window.scrollY > 5 ? window.scrollY : scrollPositions[activeScript] || 0;
+            }
             
             activeScript = videoNumber;
             
@@ -186,11 +196,17 @@
             script2.classList.toggle('active', activeScript === 2);
             btnVideo2.classList.toggle('active', activeScript === 2);
 
-            window.scrollTo(0, scrollPositions[activeScript]); // Carga la nueva posición
+            window.scrollTo(0, scrollPositions[activeScript] || 0);
         }
 
         btnVideo1.addEventListener('click', () => switchVideo(1));
         btnVideo2.addEventListener('click', () => switchVideo(2));
+        
+        resetBtn.addEventListener('click', () => {
+            stopScroll();
+            scrollPositions[activeScript] = 0;
+            window.scrollTo(0, 0);
+        });
 
         function updateDisplays() {
             speedDisplay.textContent = speedLevels[currentSpeedIndex] + 'x';
@@ -247,7 +263,7 @@
         });
         
         window.addEventListener('load', () => {
-            switchVideo(1); // Muestra el video 1 al cargar
+            switchVideo(1);
             updateDisplays();
         });
     </script>
