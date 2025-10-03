@@ -144,7 +144,7 @@
     <div id="controls">
         <div class="control-group">
             <button id="speedDown">-</button>
-            <span id="speedDisplay">2x</span>
+            <span id="speedDisplay">4x</span>
             <button id="speedUp">+</button>
         </div>
         <button id="playPauseBtn">Iniciar</button>
@@ -173,8 +173,12 @@
 
         let isScrolling = false;
         let scrollInterval;
-        const speedLevels = [1, 2, 3, 4, 6, 8, 12, 16];
-        let currentSpeedIndex = 1;
+        
+        // --- INICIO DE CAMBIOS ---
+        const speedLevels = [4, 5, 6, 7, 8]; // Nuevo rango de velocidades
+        let currentSpeedIndex = 0; // Inicia en el primer elemento del array (4x)
+        // --- FIN DE CAMBIOS ---
+        
         const baseInterval = 48;
         let fontSize = 8;
         
