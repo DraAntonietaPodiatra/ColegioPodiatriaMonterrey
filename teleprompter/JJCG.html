@@ -14,9 +14,8 @@
             background-color: #000;
             color: #fff;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            overflow: hidden; /* Evita el scroll manual */
+            overflow: hidden;
         }
-        /* Guía de lectura fija en el centro */
         body::before {
             content: '';
             position: fixed;
@@ -24,24 +23,30 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background-color: rgba(255, 0, 0, 0.6); /* Línea roja semi-transparente */
+            background-color: rgba(255, 0, 0, 0.6);
             transform: translateY(-50%);
             z-index: 100;
         }
         #teleprompter {
-            font-size: 8vw; /* Tamaño de letra relativo al ancho de la pantalla */
+            font-size: 8vw;
             line-height: 1.3;
             font-weight: bold;
             text-align: center;
-            padding: 50vh 10vw 150vh 10vw; /* Padding superior e inferior muy grande para permitir el scroll completo */
-            transition: font-size 0.2s; /* Transición suave al cambiar tamaño */
+            padding: 50vh 10vw 150vh 10vw;
+            transition: font-size 0.2s;
         }
         #teleprompter h3 {
-            color: #f1c40f; /* Color amarillo para los títulos de video */
+            color: #f1c40f;
             font-size: 0.8em;
         }
         #teleprompter p {
-            margin-bottom: 1.2em; /* Espacio entre párrafos */
+            margin-bottom: 1.2em;
+        }
+        .script-content {
+            display: none; /* Oculta ambos guiones por defecto */
+        }
+        .script-content.active {
+            display: block; /* Muestra solo el guion activo */
         }
         #controls {
             position: fixed;
@@ -75,27 +80,61 @@
         }
         #controls span {
             margin: 0 5px;
-            min-width: 40px; /* Ancho fijo para el display de velocidad/letra */
+            min-width: 40px;
             text-align: center;
         }
         .control-group {
             display: flex;
             align-items: center;
         }
+        #video-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(30, 30, 30, 0.9);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .video-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+            border-radius: 5px;
+        }
+        .video-btn.active {
+            background-color: #007bff;
+            border-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 
+    <div id="video-selector">
+        <button id="btnVideo1" class="video-btn">Ver Video 1</button>
+        <button id="btnVideo2" class="video-btn">Ver Video 2</button>
+    </div>
+
     <div id="teleprompter">
-        <h3>Video 1: ¿Qué hace un Médico Internista?</h3>
-        <p>Hola, soy el Dr. Jesús Carrillo, médico internista. Quizás te preguntes qué hacemos los internistas. Somos como el médico de cabecera para los adultos.</p>
-        <p>Nos especializamos en atender problemas complejos de salud, desde la diabetes y la presión alta hasta un diagnóstico difícil. Vemos tu salud de manera completa.</p>
-        <p>En Centro Médico Carrillo, estoy para ayudarte a entender y controlar tu salud. Tu bienestar es mi prioridad.</p>
+        <div id="script1" class="script-content">
+            <h3>Video 1: ¿Qué hace un Médico Internista?</h3>
+            <p>Hola, soy el Dr. Jesús Carrillo, médico internista. Quizás te preguntes qué hacemos los internistas. Somos como el médico de cabecera para los adultos.</p>
+            <p>Nos especializamos en atender problemas complejos de salud, desde la diabetes y la presión alta hasta un diagnóstico difícil. Vemos tu salud de manera completa.</p>
+            <p>En Centro Médico Carrillo, estoy para ayudarte a entender y controlar tu salud. Tu bienestar es mi prioridad.</p>
+        </div>
         
-        <h3>Video 2: La Presión Alta, el Enemigo Silencioso</h3>
-        <p>Hablemos de la presión alta. Muchos la llaman 'el enemigo silencioso' porque a menudo no da síntomas, pero puede dañar tu corazón y tus riñones.</p>
-        <p>La buena noticia es que se puede controlar. Con cambios sencillos como comer menos sal, caminar un poco cada día y, si es necesario, con el medicamento correcto, puedes proteger tu salud.</p>
-        <p>No esperes a sentirte mal. Revisar tu presión es rápido, no duele y puede salvarte la vida. Estamos aquí para cuidarte.</p>
+        <div id="script2" class="script-content">
+            <h3>Video 2: La Presión Alta, el Enemigo Silencioso</h3>
+            <p>Hablemos de la presión alta. Muchos la llaman 'el enemigo silencioso' porque a menudo no da síntomas, pero puede dañar tu corazón y tus riñones.</p>
+            <p>La buena noticia es que se puede controlar. Con cambios sencillos como comer menos sal, caminar un poco cada día y, si es necesario, con el medicamento correcto, puedes proteger tu salud.</p>
+            <p>No esperes a sentirte mal. Revisar tu presión es rápido, no duele y puede salvarte la vida. Estamos aquí para cuidarte.</p>
+        </div>
     </div>
 
     <div id="controls">
@@ -121,17 +160,37 @@
         const fontDownBtn = document.getElementById('fontDown');
         const speedDisplay = document.getElementById('speedDisplay');
         const fontDisplay = document.getElementById('fontDisplay');
+        const btnVideo1 = document.getElementById('btnVideo1');
+        const btnVideo2 = document.getElementById('btnVideo2');
+        const script1 = document.getElementById('script1');
+        const script2 = document.getElementById('script2');
 
         let isScrolling = false;
         let scrollInterval;
+        const speedLevels = [1, 2, 3, 4, 6, 8, 12, 16]; // Velocidades actualizadas
+        let currentSpeedIndex = 1;
+        const baseInterval = 48;
+        let fontSize = 8;
         
-        // Sistema de velocidad (ACTUALIZADO)
-        const speedLevels = [1, 2, 3, 4, 6, 8]; // Se agregaron 6x y 8x
-        let currentSpeedIndex = 1; // Índice para empezar en 2x
-        const baseInterval = 48; // Intervalo base en milisegundos para 1x
+        let activeScript = 1;
+        let scrollPositions = { 1: 0, 2: 0 }; // Guarda la posición de cada guion
 
-        // Sistema de tamaño de letra
-        let fontSize = 8; // Tamaño de letra inicial en vw
+        function switchVideo(videoNumber) {
+            stopScroll();
+            scrollPositions[activeScript] = window.scrollY; // Guarda la posición actual
+            
+            activeScript = videoNumber;
+            
+            script1.classList.toggle('active', activeScript === 1);
+            btnVideo1.classList.toggle('active', activeScript === 1);
+            script2.classList.toggle('active', activeScript === 2);
+            btnVideo2.classList.toggle('active', activeScript === 2);
+
+            window.scrollTo(0, scrollPositions[activeScript]); // Carga la nueva posición
+        }
+
+        btnVideo1.addEventListener('click', () => switchVideo(1));
+        btnVideo2.addEventListener('click', () => switchVideo(2));
 
         function updateDisplays() {
             speedDisplay.textContent = speedLevels[currentSpeedIndex] + 'x';
@@ -142,12 +201,8 @@
             isScrolling = true;
             playPauseBtn.textContent = 'Pausar';
             playPauseBtn.style.backgroundColor = '#dc3545';
-            
             const interval = baseInterval / speedLevels[currentSpeedIndex];
-            
-            scrollInterval = setInterval(() => {
-                window.scrollBy(0, 1);
-            }, interval);
+            scrollInterval = setInterval(() => { window.scrollBy(0, 1); }, interval);
         }
 
         function stopScroll() {
@@ -157,18 +212,13 @@
             clearInterval(scrollInterval);
         }
 
-        playPauseBtn.addEventListener('click', () => {
-            isScrolling ? stopScroll() : startScroll();
-        });
+        playPauseBtn.addEventListener('click', () => { isScrolling ? stopScroll() : startScroll(); });
 
         speedUpBtn.addEventListener('click', () => {
             if (currentSpeedIndex < speedLevels.length - 1) {
                 currentSpeedIndex++;
                 updateDisplays();
-                if (isScrolling) {
-                    stopScroll();
-                    startScroll();
-                }
+                if (isScrolling) { stopScroll(); startScroll(); }
             }
         });
 
@@ -176,10 +226,7 @@
             if (currentSpeedIndex > 0) {
                 currentSpeedIndex--;
                 updateDisplays();
-                if (isScrolling) {
-                    stopScroll();
-                    startScroll();
-                }
+                if (isScrolling) { stopScroll(); startScroll(); }
             }
         });
 
@@ -199,9 +246,8 @@
             }
         });
         
-        // Inicializar la pantalla
         window.addEventListener('load', () => {
-            window.scrollTo(0, 0);
+            switchVideo(1); // Muestra el video 1 al cargar
             updateDisplays();
         });
     </script>
