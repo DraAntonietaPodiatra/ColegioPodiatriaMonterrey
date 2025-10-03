@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Teleprompter Pro - Enfermería</title>
+    <title>Teleprompter Pro - Médico General (Dra. Prissila)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -121,23 +121,24 @@
 <body>
 
     <div id="video-selector">
-        <button id="btnVideo1" class="video-btn">Salvador Soriano</button>
-        <button id="btnVideo2" class="video-btn">Vanesa Salazar</button>
+        <button id="btnVideo1" class="video-btn">Video 1: Qué Hacemos</button>
+        <button id="btnVideo2" class="video-btn">Video 2: Urgencias</button>
     </div>
 
     <div id="teleprompter">
         <div id="script1" class="script-content">
-            <h3>Video 1: El Trabajo de Enfermería</h3>
-            <p>Hola, soy Salvador Soriano, parte del equipo de enfermería del Centro Médico Carrillo. Somos quienes estamos a tu lado día y noche durante tu estancia en el hospital.</p>
-            <p>Nuestro trabajo es mucho más que poner inyecciones. Monitoreamos tu recuperación, te damos tus medicamentos a tiempo, te ayudamos con tus curaciones y, sobre todo, estamos para escucharte y darte tranquilidad.</p>
-            <p>Somos el corazón del cuidado en el hospital. Tu comodidad y bienestar son nuestra razón de ser.</p>
+            <h3>Video 1: ¿Qué hace un Médico General?</h3>
+            <p>Hola, soy la Dra. Prissila, médico general. Somos el primer contacto para cuidar tu salud y la de tu familia.</p>
+            <p>Desde un resfriado, una revisión de rutina, hasta orientarte si necesitas ver a un especialista. Atendemos a niños, adultos y abuelitos. Estamos aquí para resolver tus dudas y acompañarte.</p>
+            <p>Piensa en nosotros como tu guía de salud. En Centro Médico Carrillo, estamos listos para atenderte.</p>
         </div>
         
         <div id="script2" class="script-content">
-            <h3>Video 2: ¿Qué cuidados brindamos durante tu hospitalización?</h3>
-            <p>Hola, soy la enfermera Vanesa Salazar. Cuando te quedas en el hospital, nuestro trabajo es acompañarte en cada momento. Te vigilamos de cerca: tomamos tus signos vitales, administramos tus tratamientos y resolvemos cualquier molestia que tengas.</p>
-            <p>También te apoyamos en actividades básicas: desde moverte en la cama hasta darte la confianza para preguntar cualquier cosa. Queremos que nunca te sientas solo o inseguro.</p>
-            <p>Para nosotros, tu bienestar físico y emocional dentro del hospital es lo más importante. Estamos aquí para cuidarte de corazón.</p>
+            <h3>Video 2: ¿Cuándo ir a Urgencias y cuándo a consulta?</h3>
+            <p>Es una duda muy común: ¿voy a urgencias o pido una consulta? Te explico fácil.</p>
+            <p>Una urgencia es algo que pone en riesgo la vida: un dolor de pecho fuerte, dificultad para respirar, un accidente o una fractura. Para eso, ven directo.</p>
+            <p>Para un resfriado, un dolor de garganta o una revisión, es mejor agendar una consulta. Así te atendemos con más calma.</p>
+            <p>Saber la diferencia nos ayuda a todos. Y recuerda, si tienes dudas, siempre puedes llamarnos. Estamos para ayudarte.</p>
         </div>
     </div>
 
@@ -173,12 +174,8 @@
 
         let isScrolling = false;
         let scrollInterval;
-        
-        // --- INICIO DE CAMBIOS ---
-        const speedLevels = [4, 5, 6, 7, 8]; // Nuevo rango de velocidades
-        let currentSpeedIndex = 0; // Inicia en el primer elemento del array (4x)
-        // --- FIN DE CAMBIOS ---
-        
+        const speedLevels = [4, 5, 6, 7, 8];
+        let currentSpeedIndex = 0;
         const baseInterval = 48;
         let fontSize = 8;
         
