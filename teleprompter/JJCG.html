@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Teleprompter - Dr. Jesús Carrillo</title>
+    <title>Teleprompter Pro - Dr. Jesús Carrillo</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,6 +16,18 @@
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             overflow: hidden; /* Evita el scroll manual */
         }
+        /* Guía de lectura fija en el centro */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 0, 0, 0.6); /* Línea roja semi-transparente */
+            transform: translateY(-50%);
+            z-index: 100;
+        }
         #teleprompter {
             font-size: 8vw; /* Tamaño de letra relativo al ancho de la pantalla */
             line-height: 1.3;
@@ -23,6 +35,10 @@
             text-align: center;
             padding: 50vh 10vw 150vh 10vw; /* Padding superior e inferior muy grande para permitir el scroll completo */
             transition: font-size 0.2s; /* Transición suave al cambiar tamaño */
+        }
+        #teleprompter h3 {
+            color: #f1c40f; /* Color amarillo para los títulos de video */
+            font-size: 0.8em;
         }
         #teleprompter p {
             margin-bottom: 1.2em; /* Espacio entre párrafos */
@@ -40,7 +56,8 @@
             flex-wrap: wrap;
             gap: 15px;
             color: #fff;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: bold;
         }
         #controls button {
             background-color: #444;
@@ -58,6 +75,8 @@
         }
         #controls span {
             margin: 0 5px;
+            min-width: 40px; /* Ancho fijo para el display de velocidad/letra */
+            text-align: center;
         }
         .control-group {
             display: flex;
@@ -82,13 +101,13 @@
     <div id="controls">
         <div class="control-group">
             <button id="speedDown">-</button>
-            <span>Velocidad</span>
+            <span id="speedDisplay">2x</span>
             <button id="speedUp">+</button>
         </div>
         <button id="playPauseBtn">Iniciar</button>
         <div class="control-group">
             <button id="fontDown">-</button>
-            <span>Letra</span>
+            <span id="fontDisplay">8</span>
             <button id="fontUp">+</button>
         </div>
     </div>
@@ -100,19 +119,35 @@
         const speedDownBtn = document.getElementById('speedDown');
         const fontUpBtn = document.getElementById('fontUp');
         const fontDownBtn = document.getElementById('fontDown');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const fontDisplay = document.getElementById('fontDisplay');
 
         let isScrolling = false;
         let scrollInterval;
-        let speed = 2; // Velocidad inicial (1-10)
+        
+        // Sistema de velocidad
+        const speedLevels = [1, 2, 3, 4];
+        let currentSpeedIndex = 1; // Índice para empezar en 2x
+        const baseInterval = 48; // Intervalo base en milisegundos para 1x
+
+        // Sistema de tamaño de letra
         let fontSize = 8; // Tamaño de letra inicial en vw
+
+        function updateDisplays() {
+            speedDisplay.textContent = speedLevels[currentSpeedIndex] + 'x';
+            fontDisplay.textContent = fontSize;
+        }
 
         function startScroll() {
             isScrolling = true;
             playPauseBtn.textContent = 'Pausar';
             playPauseBtn.style.backgroundColor = '#dc3545';
+            
+            const interval = baseInterval / speedLevels[currentSpeedIndex];
+            
             scrollInterval = setInterval(() => {
                 window.scrollBy(0, 1);
-            }, 100 / speed);
+            }, interval);
         }
 
         function stopScroll() {
@@ -123,16 +158,13 @@
         }
 
         playPauseBtn.addEventListener('click', () => {
-            if (isScrolling) {
-                stopScroll();
-            } else {
-                startScroll();
-            }
+            isScrolling ? stopScroll() : startScroll();
         });
 
         speedUpBtn.addEventListener('click', () => {
-            if (speed < 10) {
-                speed++;
+            if (currentSpeedIndex < speedLevels.length - 1) {
+                currentSpeedIndex++;
+                updateDisplays();
                 if (isScrolling) {
                     stopScroll();
                     startScroll();
@@ -141,8 +173,9 @@
         });
 
         speedDownBtn.addEventListener('click', () => {
-            if (speed > 1) {
-                speed--;
+            if (currentSpeedIndex > 0) {
+                currentSpeedIndex--;
+                updateDisplays();
                 if (isScrolling) {
                     stopScroll();
                     startScroll();
@@ -152,21 +185,24 @@
 
         fontUpBtn.addEventListener('click', () => {
             if (fontSize < 15) {
-                fontSize += 0.5;
+                fontSize++;
                 teleprompter.style.fontSize = fontSize + 'vw';
+                updateDisplays();
             }
         });
 
         fontDownBtn.addEventListener('click', () => {
-            if (fontSize > 3) {
-                fontSize -= 0.5;
+            if (fontSize > 4) {
+                fontSize--;
                 teleprompter.style.fontSize = fontSize + 'vw';
+                updateDisplays();
             }
         });
-
-        // Reiniciar scroll al principio al cargar la página
+        
+        // Inicializar la pantalla
         window.addEventListener('load', () => {
             window.scrollTo(0, 0);
+            updateDisplays();
         });
     </script>
 
