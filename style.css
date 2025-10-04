@@ -30,6 +30,15 @@ body {
 
 .hidden { display: none !important; }
 
+/* REGLAS DE SEGURIDAD PARA ELEMENTOS DE PROFESORES */
+.mobile-reports-btn.teacher-only:not(.visible) {
+    display: none !important;
+}
+
+.teacher-only:not(.visible) {
+    display: none !important;
+}
+
 /* --- PANTALLA DE LOGIN --- */
 .login-container {
     position: fixed;
@@ -200,6 +209,11 @@ body {
         display: flex;
         align-items: center;
         gap: 8px;
+    }
+    
+    /* Mostrar botón de reportes solo para profesores */
+    .teacher-only.visible {
+        display: flex !important;
         flex-shrink: 0;
     }
 }
