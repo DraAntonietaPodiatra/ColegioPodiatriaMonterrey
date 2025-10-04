@@ -115,11 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Gráfico de distribución de calificaciones (dona)
         const scoreChartContainer = document.getElementById('scores-chart');
-        scoreChartContainer.style.width = '100%';
-        scoreChartContainer.style.height = window.innerWidth <= 768 ? '280px' : '300px';
-        scoreChartContainer.style.position = 'relative';
-        scoreChartContainer.style.maxWidth = '100%';
-        scoreChartContainer.style.boxSizing = 'border-box';
+        // NO establecer estilos inline, dejar que CSS maneje todo
         
         new Chart(scoreChartContainer, {
             type: 'doughnut',
@@ -168,11 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Gráfico de completados por examen (barras)
         const completionChartContainer = document.getElementById('completion-chart');
-        completionChartContainer.style.width = '100%';
-        completionChartContainer.style.height = window.innerWidth <= 768 ? '280px' : '300px';
-        completionChartContainer.style.position = 'relative';
-        completionChartContainer.style.maxWidth = '100%';
-        completionChartContainer.style.boxSizing = 'border-box';
+        // NO establecer estilos inline, dejar que CSS maneje todo
         
         new Chart(completionChartContainer, {
             type: 'bar',
@@ -455,11 +447,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log('🎨 Creando nuevo gráfico de distribución');
             
-            // Asegurar que el contenedor tenga dimensiones fijas
+            // Asegurar que el contenedor tenga dimensiones responsive
             const chartContainer = document.getElementById('scores-chart');
-            chartContainer.style.width = '100%';
-            chartContainer.style.height = '300px';
-            chartContainer.style.position = 'relative';
+            // NO establecer estilos inline, dejar que CSS maneje todo
             
             new Chart(chartContainer, {
                 type: 'doughnut',
