@@ -227,15 +227,12 @@
     max-height: 100% !important;
 }
 
-#scores-chart {
-    width: 100% !important;
-    height: 300px !important;
-    position: relative !important;
-}
-
+#scores-chart, 
 #completion-chart {
     width: 100% !important;
-    height: 300px !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
     position: relative !important;
 }
 
@@ -354,6 +351,15 @@
         margin-bottom: 5px;
     }
     
+    /* Grid de gráficos responsive - MÓVIL */
+    .charts-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        width: 100% !important;
+        margin-bottom: 30px !important;
+    }
+    
     /* Gráficos responsive - MÓVIL */
     .chart-container {
         height: 320px !important;
@@ -376,6 +382,24 @@
         width: 100% !important;
         height: 280px !important;
         object-fit: contain !important;
+    }
+    
+    /* Wrapper de gráficos - MÓVIL */
+    .chart-wrapper {
+        flex: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+    }
+    
+    .chart-container h2 {
+        font-size: 1.1rem !important;
+        margin: 0 0 15px 0 !important;
+        padding-bottom: 10px !important;
     }
     
     /* Contenedor específico para gráficos de dona - MÓVIL */
@@ -563,7 +587,7 @@
     
     .chart-container.bar-chart canvas {
         max-height: 240px !important;
-        width: 100% !important;
+    width: 100% !important;
         height: 240px !important;
     }
 }
@@ -606,7 +630,7 @@
         padding: 15px !important;
         margin: 10px 0 !important;
         overflow: hidden !important;
-        position: relative !important;
+    position: relative !important;
     }
     
     .chart-container canvas {
