@@ -354,52 +354,55 @@
         margin-bottom: 5px;
     }
     
-    /* Gráficos responsive */
+    /* Gráficos responsive - MÓVIL */
     .chart-container {
-        height: 300px;
-        margin: 15px 0;
-        width: 100%;
-        max-width: 100%;
-        overflow: visible;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        height: 320px !important;
+        margin: 15px 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 20px !important;
+        box-sizing: border-box !important;
     }
     
     .chart-container canvas {
-        max-height: 280px;
-        max-width: 100%;
+        max-height: 280px !important;
+        max-width: 100% !important;
         width: 100% !important;
-        height: auto !important;
+        height: 280px !important;
+        object-fit: contain !important;
     }
     
-    /* Contenedor específico para gráficos de dona */
+    /* Contenedor específico para gráficos de dona - MÓVIL */
     .chart-container.donut-chart {
-        height: 280px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        height: 320px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
     .chart-container.donut-chart canvas {
-        max-height: 250px;
-        max-width: 250px;
-        width: 250px !important;
-        height: 250px !important;
+        max-height: 260px !important;
+        max-width: 260px !important;
+        width: 260px !important;
+        height: 260px !important;
     }
     
-    /* Contenedor específico para gráficos de barras */
+    /* Contenedor específico para gráficos de barras - MÓVIL */
     .chart-container.bar-chart {
-        height: 280px;
-        overflow-x: auto;
-        overflow-y: visible;
+        height: 320px !important;
+        overflow: hidden !important;
     }
     
     .chart-container.bar-chart canvas {
-        max-height: 250px;
-        min-width: 100%;
+        max-height: 260px !important;
         width: 100% !important;
+        height: 260px !important;
     }
     
     /* Botones y controles */
@@ -530,35 +533,38 @@
         min-height: 52px;
     }
     
-    /* Gráficos para móviles pequeños */
+    /* Gráficos para móviles pequeños - 480px */
     .chart-container {
-        height: 250px;
-        margin: 10px 0;
+        height: 280px !important;
+        margin: 10px 0 !important;
+        padding: 15px !important;
     }
     
     .chart-container canvas {
-        max-height: 230px;
-        max-width: 100%;
+        max-height: 240px !important;
+        max-width: 100% !important;
+        height: 240px !important;
     }
     
     .chart-container.donut-chart {
-        height: 230px;
+        height: 280px !important;
     }
     
     .chart-container.donut-chart canvas {
-        max-height: 200px;
-        max-width: 200px;
-        width: 200px !important;
-        height: 200px !important;
+        max-height: 220px !important;
+        max-width: 220px !important;
+        width: 220px !important;
+        height: 220px !important;
     }
     
     .chart-container.bar-chart {
-        height: 230px;
+        height: 280px !important;
     }
     
     .chart-container.bar-chart canvas {
-        max-height: 200px;
+        max-height: 240px !important;
         width: 100% !important;
+        height: 240px !important;
     }
 }
 
@@ -594,18 +600,21 @@
         border-radius: 4px;
     }
     
-    /* Forzar que los gráficos no se desborden */
+    /* Forzar que los gráficos no se desborden - MÓVIL FINAL */
     .chart-container {
-        box-sizing: border-box;
-        padding: 15px;
-        margin: 10px 0;
+        box-sizing: border-box !important;
+        padding: 15px !important;
+        margin: 10px 0 !important;
+        overflow: hidden !important;
+        position: relative !important;
     }
     
     .chart-container canvas {
-        box-sizing: border-box;
-        object-fit: contain;
-        display: block;
-        margin: 0 auto;
+        box-sizing: border-box !important;
+        object-fit: contain !important;
+        display: block !important;
+        margin: 0 auto !important;
+        max-width: 100% !important;
     }
     
     /* Asegurar que las tablas no se superpongan con gráficos */
