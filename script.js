@@ -68,7 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Mostrar elementos solo para profesores
             if (user.role === 'Profesor') {
-                document.querySelectorAll('.teacher-only').forEach(el => el.classList.remove('hidden'));
+                document.querySelectorAll('.teacher-only').forEach(el => {
+                    el.classList.remove('hidden');
+                    el.classList.add('visible');
+                });
+            } else {
+                // Asegurar que estudiantes no vean elementos de profesores
+                document.querySelectorAll('.teacher-only').forEach(el => {
+                    el.classList.add('hidden');
+                    el.classList.remove('visible');
+                });
             }
             // Inicializar los íconos de Lucide que ahora son visibles
             if (typeof lucide !== 'undefined') {
@@ -198,6 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loginScreen.classList.add('hidden');
         appLayout.classList.remove('hidden');
 
+        // Guardar datos de sesión
+        const userData = {
+            name: name,
+            role: role
+        };
+        localStorage.setItem('userData', JSON.stringify(userData));
+
         // Cargar datos del usuario en la UI
         loadUserData(name, role);
         setupNavigation(role);
@@ -243,7 +259,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupNavigation(role) {
         // Si el usuario es Profesor, muestra el panel de admin
         if (role === 'Profesor') {
-            document.querySelector('.teacher-only').classList.remove('hidden');
+            document.querySelectorAll('.teacher-only').forEach(el => {
+                el.classList.remove('hidden');
+                el.classList.add('visible');
+            });
+        } else {
+            // Asegurar que estudiantes no vean elementos de profesores
+            document.querySelectorAll('.teacher-only').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('visible');
+            });
         }
 
         const navLinks = document.querySelectorAll('.nav-link');
