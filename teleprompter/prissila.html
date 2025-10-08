@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Teleprompter Pro - Radióloga (Dra. Astrid Carrillo)</title>
+    <title>Teleprompter Pro - Consulta Pediátrica (Dra. Prissila)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -41,12 +41,6 @@
         }
         #teleprompter p {
             margin-bottom: 1.2em;
-        }
-        .script-content {
-            display: none;
-        }
-        .script-content.active {
-            display: block;
         }
         #controls {
             position: fixed;
@@ -91,62 +85,15 @@
             display: flex;
             align-items: center;
         }
-        #video-selector {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(30, 30, 30, 0.9);
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        .video-btn {
-            padding: 10px 15px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            background-color: #444;
-            color: #fff;
-            border: 1px solid #666;
-            border-radius: 5px;
-        }
-        .video-btn.active {
-            background-color: #007bff;
-            border-color: #0056b3;
-        }
     </style>
 </head>
 <body>
 
-    <div id="video-selector">
-        <button id="btnVideo1" class="video-btn">Video 1: Rayos X</button>
-        <button id="btnVideo2" class="video-btn">Video 2: ¿Qué Hago?</button>
-        <button id="btnVideo3" class="video-btn">Video 3: Ultrasonido</button>
-    </div>
-
     <div id="teleprompter">
-        <div id="script1" class="script-content">
-            <h3>Video 1: ¿Por qué son importantes los Rayos X?</h3>
-            <p>Hola, soy la Dra. Astrid Carrillo, radióloga. Los estudios de Rayos X son una herramienta fundamental para conocer el estado de tus huesos, pulmones y otros órganos sin necesidad de cirugías.</p>
-            <p>Estas imágenes nos ayudan a detectar fracturas, neumonías o incluso problemas articulares de manera rápida y clara. Así tu médico puede brindarte el tratamiento adecuado desde el inicio.</p>
-            <p>Entiendo que a veces pueden dar nervios, pero el procedimiento es seguro y rápido. Usamos la menor cantidad de radiación posible y siempre priorizamos tu bienestar. Estamos aquí para cuidar de ti y tu familia.</p>
-        </div>
-        
-        <div id="script2" class="script-content">
-            <h3>Video 2: ¿Qué hace un Radiólogo?</h3>
-            <p>Hola, soy la Dra. Astrid Carrillo, médica radióloga. Mi trabajo es ver dentro de tu cuerpo sin necesidad de abrirlo.</p>
-            <p>Usamos tecnología de vanguardia como los Rayos X digitales y el ultrasonido Alta gama para crear imágenes que nos ayudan a encontrar la causa de un dolor, una lesión o una enfermedad. Somos los ojos de tu médico.</p>
-            <p>Aquí, usamos equipo moderno para darte un diagnóstico preciso y confiable, siempre cuidando tu seguridad.</p>
-        </div>
-
-        <div id="script3" class="script-content">
-            <h3>Video 3: ¿Cuándo necesitas un Ultrasonido?</h3>
-            <p>El ultrasonido es una herramienta increíble. No usa radiación, es seguro y no duele. Lo usamos mucho para revisar a los bebés durante el embarazo.</p>
-            <p>Pero también sirve para ver órganos como la vesícula, el hígado, los riñones o para detectar problemas en los músculos. Nos da imágenes en tiempo real para un diagnóstico rápido.</p>
-            <p>Si tu médico te pide un ultrasonido, no te preocupes. Es un estudio sencillo que nos da muchísima información para cuidarte mejor.</p>
-        </div>
+        <h3>La revisión pediátrica, clave para su crecimiento</h3>
+        <p>Hola, soy la Dra. Prissila. En la consulta de los niños sanos, nos aseguramos de que todo vaya bien.</p>
+        <p>Revisamos su corazoncito, cómo crecen y que todas sus vacunas estén al día. Es la mejor forma de acompañarlos para que se desarrollen fuertes y felices.</p>
+        <p>Cada visita es un paso importante para prevenir enfermedades y resolver dudas. Traer a tus pequeños a sus chequeos es una de las muestras de amor más grandes. En Centro Médico Carrillo, estamos al cuidado de tu familia.</p>
     </div>
 
     <div id="controls">
@@ -173,17 +120,7 @@
         const resetBtn = document.getElementById('resetBtn');
         const speedDisplay = document.getElementById('speedDisplay');
         const fontDisplay = document.getElementById('fontDisplay');
-        
-        const btnVideo1 = document.getElementById('btnVideo1');
-        const btnVideo2 = document.getElementById('btnVideo2');
-        const btnVideo3 = document.getElementById('btnVideo3');
-        
-        const script1 = document.getElementById('script1');
-        const script2 = document.getElementById('script2');
-        const script3 = document.getElementById('script3');
-
-        const allScripts = [script1, script2, script3];
-        const allButtons = [btnVideo1, btnVideo2, btnVideo3];
+        const teleprompter = document.getElementById('teleprompter');
 
         let isScrolling = false;
         let scrollInterval;
@@ -191,37 +128,9 @@
         let currentSpeedIndex = 0;
         const baseInterval = 48;
         let fontSize = 8;
-        
-        let activeScript = 1;
-        let scrollPositions = { 1: 0, 2: 0, 3: 0 };
 
-        function switchVideo(videoNumber) {
-            if (isScrolling) {
-                scrollPositions[activeScript] = window.scrollY;
-                stopScroll();
-            } else {
-                 scrollPositions[activeScript] = window.scrollY > 5 ? window.scrollY : scrollPositions[activeScript] || 0;
-            }
-            
-            activeScript = videoNumber;
-            
-            allScripts.forEach((script, index) => {
-                script.classList.toggle('active', (index + 1) === activeScript);
-            });
-            allButtons.forEach((button, index) => {
-                button.classList.toggle('active', (index + 1) === activeScript);
-            });
-
-            window.scrollTo(0, scrollPositions[activeScript] || 0);
-        }
-
-        btnVideo1.addEventListener('click', () => switchVideo(1));
-        btnVideo2.addEventListener('click', () => switchVideo(2));
-        btnVideo3.addEventListener('click', () => switchVideo(3));
-        
         resetBtn.addEventListener('click', () => {
             stopScroll();
-            scrollPositions[activeScript] = 0;
             window.scrollTo(0, 0);
         });
 
@@ -266,7 +175,7 @@
         fontUpBtn.addEventListener('click', () => {
             if (fontSize < 15) {
                 fontSize++;
-                document.getElementById('teleprompter').style.fontSize = fontSize + 'vw';
+                teleprompter.style.fontSize = fontSize + 'vw';
                 updateDisplays();
             }
         });
@@ -274,13 +183,13 @@
         fontDownBtn.addEventListener('click', () => {
             if (fontSize > 4) {
                 fontSize--;
-                document.getElementById('teleprompter').style.fontSize = fontSize + 'vw';
+                teleprompter.style.fontSize = fontSize + 'vw';
                 updateDisplays();
             }
         });
         
         window.addEventListener('load', () => {
-            switchVideo(1);
+            window.scrollTo(0, 0);
             updateDisplays();
         });
     </script>
